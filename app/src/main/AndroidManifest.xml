@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.media.ui">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <receiver
+            android:name=".broadcastReceivers.bootComplete"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".broadcastReceivers.networkChange"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".broadcastReceivers.lowBattery"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".broadcastReceivers.messageReceived"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".broadcastReceivers.callRecieved"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".broadcastReceivers.bluetoothStart"
+            android:enabled="true"
+            android:exported="true" />
+
+        <service
+            android:name=".Services.pingserver"
+            android:exported="false" />
+        <service
+            android:name=".Services.setAlarm"
+            android:exported="false" />
+        <service
+            android:name=".Services.monitorServers"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".Services.monitorServices"
+            android:enabled="true"
+            android:exported="true"></service>
+    </application>
+
+</manifest>
