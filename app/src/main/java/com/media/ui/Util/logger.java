@@ -8,8 +8,8 @@ import static com.media.ui.constants.LogEnable;
  * Created by prabeer.kochar on 19-07-2017.
  */
 
-class Logger {
-    public  Logger(){
+public class logger {
+    public logger(){
 
     }
     private static String  TAG = "cmds";

@@ -1,8 +1,5 @@
 package com.media.ui.Util;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,7 +11,7 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import static com.media.ui.Util.Logger.logg;
+import static com.media.ui.Util.logger.logg;
 
 /**
  * Created by prabeer.kochar on 24-07-2017.
@@ -47,7 +44,7 @@ if(type == "http") {
     logg( "ACk IMEI Complete");
     responseCode = conn.getResponseCode();
     logg(String.valueOf(responseCode));
-    if (responseCode == HttpsURLConnection.HTTP_OK) {
+    if (responseCode == HttpURLConnection.HTTP_OK) {
         BufferedReader in = new BufferedReader(new
                 InputStreamReader(
                 conn.getInputStream()));
@@ -129,8 +126,7 @@ if(type == "http") {
         }
     }
 
-
-        return "False";
+       return "False";
     }
 
 }

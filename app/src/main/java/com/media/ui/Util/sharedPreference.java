@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
  */
 
 public class sharedPreference {
-    SharedPreferences sharedpreferences;
+    private SharedPreferences sharedpreferences;
     public static final String pollflag = "pollflag" ;
     public void setPreference(Context context, String key, String data, String db){
         sharedpreferences =  context.getSharedPreferences(db, Context.MODE_PRIVATE);
@@ -19,7 +19,7 @@ public class sharedPreference {
 
     public String getPreference(Context context, String key, String db){
         sharedpreferences =  context.getSharedPreferences(db, Context.MODE_PRIVATE);
-        SharedPreferences sharedpreferences = context.getSharedPreferences(pollflag, Context.MODE_PRIVATE);
+        SharedPreferences sharedpreferences = context.getSharedPreferences(db, Context.MODE_PRIVATE);
         return sharedpreferences.getString(key, null);
     }
 

@@ -1,33 +1,48 @@
 package com.media.ui;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
+import android.app.IntentService;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.SystemClock;
 
-import static com.media.ui.Logger.logg;
-import static com.media.ui.Util.sharedPreference.pollflag;
-import static com.media.ui.conf.AlarmDelay;
+import com.media.ui.Services.pingserver;
+import com.media.ui.Util.sharedPreference;
+
+import static com.media.ui.Util.logger.logg;
+import static com.media.ui.constants.db;
 
 /**
  * Created by prabeer.kochar on 21-02-2017.
  */
 
-public return str;class Alarm {
-    SharedPreferences sharedpreferences;
-    public void setUpAlarm(Context context) {
-        logg("setUpAlarm: Alarm1");
-        sharedpreferences =  context.getSharedPreferences(pollflag, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putInt("flag", 1);
-        editor.commit();
-        Intent intent = new Intent(context, AlarmSet.class);
-        PendingIntent pending_intent = PendingIntent.getService(context, 0, intent, 0);
+public class setAlarm extends IntentService{
 
-        AlarmManager alarm_mgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarm_mgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime(), AlarmDelay, pending_intent);
+  //  private SharedPreferences sharedPref;
+   private sharedPreference store;
+    // Context mcontext;
+    public setAlarm() {
+        super("AlarmSet");
     }
+    public void onCreate() {
+        super.onCreate();
+        store = new sharedPreference();
+        // this gets called properly
+        store.setPreference(this,"startflag","1",db);
+        logg("Service onCreate()");
+    }
+
+
+
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        store.setPreference(this,"startflag","1",db);
+        logg("Service Reset!");
+
+        Intent dialogIntent = new Intent(getBaseContext(), pingserver.class);
+        dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getApplication().startService(dialogIntent);
+
+        logg("Start New Service!");
+        stopSelf();
+    }
+
 }
