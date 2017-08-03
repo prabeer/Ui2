@@ -13,4 +13,5 @@ public class constants {
     public static final String db = "alarmflag";
     public static final String FORWARD_SLASH = "/";
     public static final String EMPTY_STRING = "";
+    public static final String BASE_URL = "http://35.154.255.93/WAR/";
 }
