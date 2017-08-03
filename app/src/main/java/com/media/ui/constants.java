@@ -11,4 +11,6 @@ public class constants {
     public static final boolean LogEnable = true;
     public static final int AlarmDelay = 90000;
     public static final String db = "alarmflag";
+    public static final String FORWARD_SLASH = "/";
+    public static final String EMPTY_STRING = "";
 }
