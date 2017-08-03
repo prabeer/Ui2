@@ -10,13 +10,15 @@ public class pollRequest {
     private String loc;
     private String mcc;
     private String cel;
+    private String dev;
 
-    public pollRequest(String IM, String st, String loc, String mcc, String cel){
+    public pollRequest(String IM, String st, String loc, String mcc, String cel, String dev){
         this.IM = IM;
         this.st = st;
         this.loc = loc;
         this.mcc = mcc;
         this.cel = cel;
+        this.dev = dev;
     }
     public void setIM(String IM){
         this.IM = IM;
@@ -33,6 +35,9 @@ public class pollRequest {
     public void setcel(String cel){
         this.cel = cel;
     }
+    public void setDev(String dev){
+        this.dev = dev;
+    }
 
     public String getIM(){
         return IM;
@@ -48,6 +53,9 @@ public class pollRequest {
     }
     public String getcel(){
         return cel;
+    }
+    public String getDev(){
+        return dev;
     }
 
 }

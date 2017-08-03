@@ -26,7 +26,7 @@ public class utility {
         return product+'|'+model+'|'+manufacturer;
     }
 
-    public String ShellExecuter(String command) {
+    public static String ShellExecuter(String command) {
 
         StringBuffer output = new StringBuffer();
 
