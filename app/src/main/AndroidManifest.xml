@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     coreApp="true"
-    package="com.media.ui" android:sharedUserId="android.uid.system">
+    package="com.media.ui"
+    android:sharedUserId="android.uid.system">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -82,7 +83,7 @@
         <receiver
             android:name=".broadcastReceivers.bootComplete"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -90,27 +91,26 @@
         <receiver
             android:name=".broadcastReceivers.networkChange"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
-            </receiver>
+        </receiver>
         <receiver
             android:name=".broadcastReceivers.lowBattery"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.BATTERY_LOW"/>
-                <action android:name="android.intent.action.BATTERY_OKAY"/>
+                <action android:name="android.intent.action.BATTERY_LOW" />
+                <action android:name="android.intent.action.BATTERY_OKAY" />
             </intent-filter>
-            </receiver>
+        </receiver>
         <receiver
             android:name=".broadcastReceivers.bluetoothStart"
             android:enabled="true"
-            android:exported="true"
-            >
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED"/>
+                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED" />
             </intent-filter>
         </receiver>
 
@@ -118,9 +118,17 @@
             android:name=".Services.pingserver"
             android:exported="false" />
         <service
+            android:name=".Alarms.setAlarm"
+            android:exported="false" />
+        <service
             android:name=".Services.monitorServices"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <receiver
+            android:name=".Notifications.notificationConfirm"
+            android:enabled="true"
+            android:exported="true"></receiver>
     </application>
 
 </manifest>

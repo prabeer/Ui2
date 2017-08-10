@@ -7,6 +7,8 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SubscriptionManager;
+import android.telephony.TelephonyManager;
+import android.telephony.gsm.GsmCellLocation;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -18,7 +20,7 @@ import static com.media.ui.Util.logger.logg;
  * Created by prabeer.kochar on 03-08-2017.
  */
 
-public class utility {
+public final class utility {
     public  static String DeviceDetails(){
         String manufacturer = Build.MANUFACTURER;
         String model = Build.MODEL;
@@ -114,7 +116,7 @@ public class utility {
     // The minimum time between updates in milliseconds
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
 
-    protected static String Gloc(Context paramContext) throws Exception {
+    public static String Gloc(Context paramContext) throws Exception {
         try {
             LocationManager locationManager = (LocationManager)
                     paramContext.getSystemService(LOCATION_SERVICE);
@@ -200,4 +202,45 @@ public class utility {
         }
         return Double.toString(lat) + "|" + Double.toString(lon);
     }
+
+
+        public static String imi(Context context) {
+            try {
+                TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+                return String.valueOf(tm.getDeviceId());
+            }catch(Exception e){
+                return "99999999";
+            }
+        }
+    public static int GetCellid(Context paramContext) throws Exception {
+        {
+            GsmCellLocation localGsmCellLocation = (GsmCellLocation) ((TelephonyManager) paramContext.getSystemService(Context.TELEPHONY_SERVICE)).getCellLocation();
+            if (isUMTS(paramContext)) {
+                if (localGsmCellLocation != null) {
+                    return localGsmCellLocation.getLac() & 0xFFFF;
+                }
+            } else if (localGsmCellLocation != null) {
+                int i = localGsmCellLocation.getLac();
+                return i;
+            }
+            return -1;
+        }
+    }
+
+    public static boolean isUMTS(Context paramContext) {
+        switch (((TelephonyManager) paramContext.getSystemService(Context.TELEPHONY_SERVICE)).getNetworkType()) {
+            default:
+                return false;
+            case 8:
+                return true;
+            case 10:
+                return true;
+            case 9:
+                return true;
+            case 3:
+                return true;
+        }
+
+    }
+
 }

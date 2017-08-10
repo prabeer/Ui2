@@ -1,4 +1,4 @@
-package com.media.ui;
+package com.media.ui.Alarms;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -7,7 +7,6 @@ import com.media.ui.Services.pingserver;
 import com.media.ui.Util.sharedPreference;
 
 import static com.media.ui.Util.logger.logg;
-import static com.media.ui.constants.db;
 
 /**
  * Created by prabeer.kochar on 21-02-2017.
@@ -19,22 +18,19 @@ public class setAlarm extends IntentService{
    private sharedPreference store;
     // Context mcontext;
     public setAlarm() {
-        super("AlarmSet");
+        super("setAlarm");
     }
     public void onCreate() {
         super.onCreate();
-        store = new sharedPreference();
+       // store = new sharedPreference();
         // this gets called properly
-        store.setPreference(this,"startflag","1",db);
+       // store.setPreference(this,"startflag","1",db);
         logg("Service onCreate()");
     }
 
-
-
-
     @Override
     protected void onHandleIntent(Intent intent) {
-        store.setPreference(this,"startflag","1",db);
+        // store.setPreference(this,"startflag","1",db);
         logg("Service Reset!");
 
         Intent dialogIntent = new Intent(getBaseContext(), pingserver.class);

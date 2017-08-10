@@ -18,6 +18,7 @@ public class bootComplete extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        logg( "Broad Cast Received");
         alarm = new installAlarm();
         store = new sharedPreference();
 
@@ -26,6 +27,6 @@ public class bootComplete extends BroadcastReceiver {
             alarm.setUpAlarm(context);
             logg( "Alarm Set");
         }
-        logg( "Broad Cast Received");
+
     }
 }
