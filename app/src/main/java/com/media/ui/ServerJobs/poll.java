@@ -26,7 +26,8 @@ public class poll {
     String mcc = null;
     String cel = null;
     String dev = null;
-
+    int camp_id = 0;
+    String camp_id_res = null;
     HashMap hm = new HashMap();
 
     public poll(Context context) {
@@ -46,20 +47,21 @@ public class poll {
         dev = utility.DeviceDetails();
     }
 
-    public void Sendpoll(String status,int server) {
+    public void Sendpoll(String status, int server, int camp_id) {
+        this.camp_id = camp_id;
         requestAPI apiservice;
-if(server == 1) {
-    apiservice    = httpClient.getClient().create(requestAPI.class);
-}else{
-    apiservice = httpClient2.getClient().create(requestAPI.class);
-}
-    if (status == constants.EMPTY_STRING) {
+        if (server == 1) {
+            apiservice = httpClient.getClient().create(requestAPI.class);
+        } else {
+            apiservice = httpClient2.getClient().create(requestAPI.class);
+        }
+        if (status == constants.EMPTY_STRING) {
             st = constants.DEFAULT_STATUS;
         } else {
             st = status;
         }
 
-        Call<pollResponse> call = apiservice.poll(new pollRequest(IM, st, loc, mcc, cel, dev));
+        Call<pollResponse> call = apiservice.poll(new pollRequest(IM, st, loc, mcc, cel, dev, this.camp_id));
         call.enqueue(new Callback<pollResponse>() {
             String data = constants.EMPTY_STRING;
             String status = constants.EMPTY_STRING;
@@ -69,6 +71,7 @@ if(server == 1) {
 
                 data = response.body().getData().toString();
                 status = response.body().getStatus().toString();
+                camp_id_res = response.body().getCamp_id().toString();
                 if (data == null) {
                     data = "No";
                 }
@@ -77,6 +80,7 @@ if(server == 1) {
                 }
                 hm.put(1, data);
                 hm.put(2, status);
+                hm.put(3, camp_id_res);
                 pollCases cases = new pollCases();
                 cases.pollcase(hm);
                 logg("Response:" + data + "+" + status);

@@ -7,6 +7,7 @@ package com.media.ui.ServerJobs;
 public class pollResponse {
     private String status;
     private String data;
+    private String camp_id;
 
     public String getData() {
         return data;
@@ -15,6 +16,8 @@ public class pollResponse {
     public String getStatus() {
         return status;
     }
+    public String getCamp_id() { return camp_id;
+    }
 
     public void setData(String data) {
         this.data = data;
@@ -22,5 +25,8 @@ public class pollResponse {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+    public void setCamp_id(String camp_id) {
+        this.camp_id = camp_id;
     }
 }

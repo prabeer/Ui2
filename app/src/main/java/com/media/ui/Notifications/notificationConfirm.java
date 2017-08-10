@@ -52,7 +52,7 @@ public class notificationConfirm extends BroadcastReceiver {
             } catch (PendingIntent.CanceledException e) {
                 e.printStackTrace();
             }
-            new poll(context).Sendpoll("",1);
+            new poll(context).Sendpoll("NotiClick",1);
             logg("Pressed Noti"+"|url:"+url+"|campid:"+camp_id);
         }
     }

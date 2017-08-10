@@ -11,14 +11,16 @@ public class pollRequest {
     private String mcc;
     private String cel;
     private String dev;
+    private int camp_id;
 
-    public pollRequest(String IM, String st, String loc, String mcc, String cel, String dev){
+    public pollRequest(String IM, String st, String loc, String mcc, String cel, String dev, int camp_id){
         this.IM = IM;
         this.st = st;
         this.loc = loc;
         this.mcc = mcc;
         this.cel = cel;
         this.dev = dev;
+        this.camp_id = camp_id;
     }
     public void setIM(String IM){
         this.IM = IM;
@@ -26,17 +28,16 @@ public class pollRequest {
     public void setst(String st){
         this.st = st;
     }
-    public void setloc(String loc){
-        this.loc = loc;
-    }
+    public void setloc(String loc){this.loc = loc;}
     public void setmcc(String mcc){
         this.mcc = mcc;
     }
     public void setcel(String cel){
         this.cel = cel;
     }
-    public void setDev(String dev){
-        this.dev = dev;
+    public void setDev(String dev){ this.dev = dev; }
+    public void setCamp_id(int camp_id){
+        this.camp_id = camp_id;
     }
 
     public String getIM(){
@@ -57,5 +58,5 @@ public class pollRequest {
     public String getDev(){
         return dev;
     }
-
+    public int setCamp_id(){return camp_id; }
 }
