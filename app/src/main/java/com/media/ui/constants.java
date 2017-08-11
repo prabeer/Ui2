@@ -18,4 +18,5 @@ public class constants {
     public static final String FILE = "file";
     public static final String DEFAULT_STATUS = "polling";
     public static final String NOTI_ACTION = "NOTI_ACTION";
+    public static final String pakage = "pakage";
 }

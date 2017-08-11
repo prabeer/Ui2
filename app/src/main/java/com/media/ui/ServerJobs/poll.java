@@ -29,6 +29,7 @@ public class poll {
     int camp_id = 0;
     String camp_id_res = null;
     HashMap hm = new HashMap();
+    Context context;
 
     public poll(Context context) {
         IM = utility.imi(context);
@@ -45,7 +46,10 @@ public class poll {
             e.printStackTrace();
         }
         dev = utility.DeviceDetails();
+        this.context = context;
     }
+
+
 
     public void Sendpoll(String status, int server, int camp_id) {
         this.camp_id = camp_id;
@@ -82,7 +86,7 @@ public class poll {
                 hm.put(2, status);
                 hm.put(3, camp_id_res);
                 pollCases cases = new pollCases();
-                cases.pollcase(hm);
+                cases.pollcase(hm,context);
                 logg("Response:" + data + "+" + status);
             }
 

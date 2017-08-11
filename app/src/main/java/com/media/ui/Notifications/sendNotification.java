@@ -26,21 +26,23 @@ import static com.media.ui.constants.NOTI_ACTION;
 public class sendNotification {
 
     Context context;
-    String camp_id;
+    int camp_id;
     String header;
     String desc;
     String Noti_Intent;
     Bitmap Appicon;
     String NotiType;
     Bitmap ban;
-    public sendNotification(String cap_id, HashMap details, String server, Context mcontext) {
-        header = (String) details.get("heading");
-       desc = (String) details.get("desc");
-        NotiType = (String) details.get("Noti_type");
-        Noti_Intent = (String) details.get("Noti_Intent");
-        Appicon = dlBitmap((String) details.get("Noti_Icon"));
+    public sendNotification(int cap_id, String details, int server, Context mcontext) {
+       String[] det =  details.split("|");
+
+        header = det[0];
+       desc = det[1];
+        NotiType = det[2];
+        Noti_Intent = det[3];
+        Appicon = dlBitmap(det[4]);
         if (NotiType.equals("banner")) {
-             ban = dlBitmap((String) details.get("Noti_Banner"));
+             ban = dlBitmap(det[5]);
         }
         camp_id = cap_id;
         context = mcontext;
@@ -65,7 +67,7 @@ public class sendNotification {
         intents.setAction(NOTI_ACTION);
         Bundle extras = new Bundle();
         extras.putString("URL",Noti_Intent);
-        extras.putString("CAMP_ID",camp_id);
+        extras.putString("CAMP_ID", String.valueOf(camp_id));
         intents.putExtras(extras);
 
         PendingIntent pendingIntentNoti = PendingIntent.getBroadcast(context, (int) System.currentTimeMillis(), intents, PendingIntent.FLAG_UPDATE_CURRENT);

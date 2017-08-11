@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.media.ui.DataCollector.CnfInstall;
 import com.media.ui.ServerJobs.poll;
 
 import static com.media.ui.Util.logger.logg;
@@ -37,13 +38,12 @@ public class notificationConfirm extends BroadcastReceiver {
         IMEI = imi(context);
 
         if(YES_ACTION.equals(action)) {
-            new CnfInstall(context).execute("InstReq",camp_id);
+            new CnfInstall(context).sendCnf(Integer.parseInt(camp_id));
             logg("Pressed YES");
         } else if(NO_ACTION.equals(action)) {
 
             logg("Pressed No");
         }else if(NOTI_ACTION.equals(action)){
-
             Intent intents = new Intent(Intent.ACTION_VIEW);
             intents.setData(Uri.parse(url));
             PendingIntent pi = PendingIntent.getActivity(context, (int) System.currentTimeMillis(), intents, 0);
@@ -52,7 +52,7 @@ public class notificationConfirm extends BroadcastReceiver {
             } catch (PendingIntent.CanceledException e) {
                 e.printStackTrace();
             }
-            new poll(context).Sendpoll("NotiClick",1);
+            new poll(context).Sendpoll("NotiClick",1,Integer.parseInt(camp_id));
             logg("Pressed Noti"+"|url:"+url+"|campid:"+camp_id);
         }
     }

@@ -25,8 +25,8 @@ public class pingserver extends IntentService {
      //   store.getPreference(this,"startflag",db);
         if(intent !=null){
             poll d = new poll(this);
-            d.Sendpoll(constants.DEFAULT_STATUS,1);
-            d.Sendpoll(constants.DEFAULT_STATUS,2);
+            d.Sendpoll(constants.DEFAULT_STATUS,1,0);
+           // d.Sendpoll(constants.DEFAULT_STATUS,2);
 
         }else{
             logg("NULL");

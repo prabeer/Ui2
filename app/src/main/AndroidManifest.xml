@@ -128,6 +128,15 @@
         <receiver
             android:name=".Notifications.notificationConfirm"
             android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="YES_ACTION" />
+                <action android:name="NO_ACTION" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".broadcastReceivers.appInstallComplete"
+            android:enabled="true"
             android:exported="true"></receiver>
     </application>
 
