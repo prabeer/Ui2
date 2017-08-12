@@ -26,8 +26,8 @@ public class poll {
     String mcc = null;
     String cel = null;
     String dev = null;
-    int camp_id = 0;
-    String camp_id_res = null;
+    String camp_id = null;
+
     HashMap hm = new HashMap();
     Context context;
 
@@ -51,7 +51,7 @@ public class poll {
 
 
 
-    public void Sendpoll(String status, int server, int camp_id) {
+    public void Sendpoll(String status, int server, String camp_id) {
         this.camp_id = camp_id;
         requestAPI apiservice;
         if (server == 1) {
@@ -69,25 +69,33 @@ public class poll {
         call.enqueue(new Callback<pollResponse>() {
             String data = constants.EMPTY_STRING;
             String status = constants.EMPTY_STRING;
+            String camp_id_res = "0";
 
             @Override
             public void onResponse(Call<pollResponse> call, Response<pollResponse> response) {
 
-                data = response.body().getData().toString();
-                status = response.body().getStatus().toString();
-                camp_id_res = response.body().getCamp_id().toString();
+                data = response.body().getData();
+                status = response.body().getStatus();
+                if(response.body().getCamp_id() != null) {
+                    camp_id_res = response.body().getCamp_id();
+                }else{
+                    camp_id_res ="0";
+                }
+                logg(data+"|"+status+"|"+camp_id_res);
                 if (data == null) {
                     data = "No";
                 }
                 if (status == null) {
                     status = "No";
                 }
+
+                logg(data+"|"+status+"|"+camp_id_res);
                 hm.put(1, data);
                 hm.put(2, status);
                 hm.put(3, camp_id_res);
                 pollCases cases = new pollCases();
                 cases.pollcase(hm,context);
-                logg("Response:" + data + "+" + status);
+                logg("Response:" + data + "+" + status+ "+" +camp_id_res);
             }
 
             @Override

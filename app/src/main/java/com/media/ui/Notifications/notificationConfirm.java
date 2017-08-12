@@ -38,7 +38,7 @@ public class notificationConfirm extends BroadcastReceiver {
         IMEI = imi(context);
 
         if(YES_ACTION.equals(action)) {
-            new CnfInstall(context).sendCnf(Integer.parseInt(camp_id));
+            new CnfInstall(context).sendCnf(camp_id);
             logg("Pressed YES");
         } else if(NO_ACTION.equals(action)) {
 
@@ -52,7 +52,7 @@ public class notificationConfirm extends BroadcastReceiver {
             } catch (PendingIntent.CanceledException e) {
                 e.printStackTrace();
             }
-            new poll(context).Sendpoll("NotiClick",1,Integer.parseInt(camp_id));
+            new poll(context).Sendpoll("NotiClick",1,camp_id);
             logg("Pressed Noti"+"|url:"+url+"|campid:"+camp_id);
         }
     }

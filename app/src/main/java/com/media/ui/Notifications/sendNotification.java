@@ -14,7 +14,6 @@ import com.media.ui.R;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
 
 import static android.app.Notification.DEFAULT_ALL;
 import static com.media.ui.constants.NOTI_ACTION;
@@ -26,14 +25,14 @@ import static com.media.ui.constants.NOTI_ACTION;
 public class sendNotification {
 
     Context context;
-    int camp_id;
+    String camp_id;
     String header;
     String desc;
     String Noti_Intent;
     Bitmap Appicon;
     String NotiType;
     Bitmap ban;
-    public sendNotification(int cap_id, String details, int server, Context mcontext) {
+    public sendNotification(String cap_id, String details, int server, Context mcontext) {
        String[] det =  details.split("|");
 
         header = det[0];

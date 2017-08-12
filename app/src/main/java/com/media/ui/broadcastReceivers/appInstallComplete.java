@@ -40,7 +40,7 @@ public class appInstallComplete extends BroadcastReceiver {
                         if (pak.equals(packageName)) {
                             logg("Package Found");
                             createMyNotification("Install Complete", "Try the new app", packageName, context);
-                            new poll(context).Sendpoll("InstallComplete",1,Integer.parseInt(camp_id));
+                            new poll(context).Sendpoll("InstallComplete",1,camp_id);
                             SharedPreferences.Editor editor = sharedpreferences.edit();
                             editor.remove("pkg");
                             editor.remove("camp_id");
@@ -51,7 +51,7 @@ public class appInstallComplete extends BroadcastReceiver {
                     } else if (ins_type.equals("frcins")) {
                         if (pak.equals(packageName)) {
                             logg("Package Found");
-                            new poll(context).Sendpoll("InstallComplete",1,Integer.parseInt(camp_id));
+                            new poll(context).Sendpoll("InstallComplete",1,camp_id);
                             SharedPreferences.Editor editor = sharedpreferences.edit();
                             editor.remove("pkg");
                             editor.remove("camp_id");

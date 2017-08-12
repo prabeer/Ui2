@@ -33,16 +33,16 @@ public class CnfInstall {
     String loc;
     Context context;
     String pkg;
-    int camp_id;
+    String camp_id;
 
     public  CnfInstall(Context context){
         this.context = context;
     }
-    public void sendCnf(int camp_id){
+    public void sendCnf(String camp_id){
         new poll(this.context).Sendpoll("inscnf",1,camp_id);
     }
 
-    public void downloadAndInstall(String loc1, String uri,String pkg1,int camp_id1){
+    public void downloadAndInstall(String loc1, String uri, String pkg1, String camp_id1){
         loc = loc1;
         pkg = pkg1;
         camp_id = camp_id1;
