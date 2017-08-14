@@ -1,5 +1,6 @@
 package com.media.ui.Notifications;
 
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import com.media.ui.DataCollector.CnfInstall;
 import com.media.ui.ServerJobs.poll;
 
+import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.media.ui.Util.logger.logg;
 import static com.media.ui.Util.utility.imi;
 
@@ -41,7 +43,10 @@ public class notificationConfirm extends BroadcastReceiver {
             new CnfInstall(context).sendCnf(camp_id);
             logg("Pressed YES");
         } else if(NO_ACTION.equals(action)) {
-
+            new poll(context).Sendpoll("InstCancel",1,camp_id);
+            NotificationManager notificationmanager = (NotificationManager) context
+                    .getSystemService(NOTIFICATION_SERVICE);
+            notificationmanager.cancel(8935);
             logg("Pressed No");
         }else if(NOTI_ACTION.equals(action)){
             Intent intents = new Intent(Intent.ACTION_VIEW);

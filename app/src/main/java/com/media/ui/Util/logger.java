@@ -16,7 +16,16 @@ public class logger {
     private static boolean enable = LogEnable;
     public static void logg(String val){
         if(enable) {
-            Log.d(TAG, "btt: " + val);
+            Log.d(TAG, ":btt: " + val);
         }
     }
+    private String getClassName() {
+        Class<?> enclosingClass = getClass().getEnclosingClass();
+        if (enclosingClass != null) {
+            return  enclosingClass.getName();
+        } else {
+            return getClass().getName();
+        }
+    }
+
 }

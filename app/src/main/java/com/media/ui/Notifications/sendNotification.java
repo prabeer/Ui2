@@ -5,19 +5,18 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
 
 import com.media.ui.R;
+import com.media.ui.ServerJobs.poll;
+import com.media.ui.Util.bitMapDl;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 import static android.app.Notification.DEFAULT_ALL;
+import static com.media.ui.Util.logger.logg;
 import static com.media.ui.constants.NOTI_ACTION;
-
 /**
  * Created by prabeer.kochar on 20-07-2017.
  */
@@ -33,20 +32,23 @@ public class sendNotification {
     String NotiType;
     Bitmap ban;
     public sendNotification(String cap_id, String details, int server, Context mcontext) {
-       String[] det =  details.split("|");
+       String[] det =  details.split("\\|");
 
         header = det[0];
-       desc = det[1];
+        desc = det[1];
         NotiType = det[2];
-        Noti_Intent = det[3];
-        Appicon = dlBitmap(det[4]);
+        Noti_Intent = det[4];
+        Appicon = dlBitmap(det[3]);
         if (NotiType.equals("banner")) {
              ban = dlBitmap(det[5]);
         }
         camp_id = cap_id;
         context = mcontext;
+        logg("ddatta:"+header+"|"+desc+"|"+NotiType+"|"+Noti_Intent+"|"+det[3]+"|"+det[5]+"|"+camp_id);
+        CreateNoti();
+        new poll(mcontext).Sendpoll("NotiRecieved",1,camp_id);
     }
-    public void CreateNoti(){
+    private void CreateNoti(){
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setContentTitle(header);
@@ -79,19 +81,14 @@ public class sendNotification {
         mNotificationManager.notify(8935, builder.build());
     }
     private Bitmap dlBitmap(String ur) {
-        Bitmap img = null;
+        Bitmap b = null;
         try {
-            URL url = new URL(ur);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream in = connection.getInputStream();
-            img = BitmapFactory.decodeStream(in);
-
-        } catch (Exception e) {
+           b  = new bitMapDl().execute(ur).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return img;
-
+        return b;
     }
 }

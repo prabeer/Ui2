@@ -54,6 +54,7 @@ public class poll {
     public void Sendpoll(String status, int server, String camp_id) {
         this.camp_id = camp_id;
         requestAPI apiservice;
+        logg("poll:"+status+","+server+","+camp_id+","+IM+","+loc+","+mcc+","+cel+","+dev);
         if (server == 1) {
             apiservice = httpClient.getClient().create(requestAPI.class);
         } else {

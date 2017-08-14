@@ -5,7 +5,7 @@ package com.media.ui;
  */
 
 public class constants {
-    public static final String AppFolder = "erqwwre";
+    public static final String AppFolder = "erqwwre" + "/app.apk";
     public static final boolean LogEnable = true;
     public static final int AlarmDelay = 90000;
     public static final String db = "alarmflag";

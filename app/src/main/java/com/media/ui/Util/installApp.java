@@ -30,11 +30,12 @@ public class installApp {
     public static final String ACTION_INSTALL_COMPLETE = "com.media.ui.ACTION_INSTALL_COMMIT";
 
     public installApp(Context context) {
+        logg("Install Start");
         mcontext = context;
     }
 
     public boolean install(String loc, String pkg) {
-        //logg("Package:- " + pkg);
+        logg("Package:- " + pkg);
         if (!pkg.isEmpty()) {
             InputStream i = null;
             File f = new File(loc);
