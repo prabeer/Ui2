@@ -28,6 +28,7 @@ public class appInstallComplete extends BroadcastReceiver {
         String actionStr = intent.getAction();
         try {
             if (Intent.ACTION_PACKAGE_ADDED.equals(actionStr)) {
+                logg("Broadcast Received");
                 String packageName = intent.getData().getEncodedSchemeSpecificPart();
                 SharedPreferences sharedpreferences = context.getSharedPreferences(constants.pakage, Context.MODE_PRIVATE);
                 if (sharedpreferences.contains("pkg")) {

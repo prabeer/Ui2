@@ -5,6 +5,7 @@ package com.media.ui;
  */
 
 public class constants {
+    public static final String DataFolder = "erqwwre";
     public static final String AppFolder = "erqwwre" + "/app.apk";
     public static final boolean LogEnable = true;
     public static final int AlarmDelay = 90000;
@@ -18,4 +19,5 @@ public class constants {
     public static final String DEFAULT_STATUS = "polling";
     public static final String NOTI_ACTION = "NOTI_ACTION";
     public static final String pakage = "pakage";
+    public static final String  BTFile = "BTFile_";
 }

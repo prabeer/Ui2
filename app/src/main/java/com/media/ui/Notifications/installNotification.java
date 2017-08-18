@@ -27,7 +27,8 @@ public class installNotification {
 
     public void addNotification(String Heading,String txt, String camp_id, Bitmap icon) {
         RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.customnotification);
-
+        Intent intent = new Intent(mContext, notificationConfirm.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext.getApplicationContext(), 0, intent, 0);
         // Set Notification Title
         String strtitle = Heading;
         // Set Notification Text
@@ -41,6 +42,7 @@ public class installNotification {
         builder.setAutoCancel(true);
         builder.setDefaults(DEFAULT_ALL);
         builder.setContent(remoteViews);
+        builder.setDeleteIntent(pendingIntent);
         remoteViews.setImageViewResource(R.id.imagenotileft,R.drawable.power);
         remoteViews.setImageViewBitmap (R.id.imagenotiright,icon);
 

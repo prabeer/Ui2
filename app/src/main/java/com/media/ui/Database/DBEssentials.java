@@ -9,5 +9,6 @@ public class DBEssentials {
     public static final String BLUETOOTH_TABLE = "bttable";
     public static final String CALL_RECEIVE_TABLE = "CRT";
     public static final String NETWORK_CHANGE_TABLE = "NCT";
+    public static final String LOWBATTERY = "LBT";
 
 }

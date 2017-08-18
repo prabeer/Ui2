@@ -36,6 +36,7 @@ public class CnfInstall {
 //isko theek karna hai
     1. If app is installed already inform user
     2. If Folder is not deleted then delete start again
+    3. If noti swipe then inform user
     */
 //////////////////////////
 
