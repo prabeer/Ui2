@@ -32,8 +32,6 @@ public class registerBroadcastLock extends Service {
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         logg("Start Service");
-        Intent service = new Intent(this, appMonitorService.class);
-        startService(service);
         return START_STICKY;
     }
 

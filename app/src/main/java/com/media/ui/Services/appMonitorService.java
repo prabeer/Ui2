@@ -1,48 +1,75 @@
 package com.media.ui.Services;
 
 import android.app.ActivityManager;
-import android.app.Service;
+import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
-import android.os.IBinder;
+import android.content.SharedPreferences;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.media.ui.Util.logger.logg;
 
-public class appMonitorService extends Service {
+/**
+ * An {@link IntentService} subclass for handling asynchronous task requests in
+ * a service on a separate handler thread.
+ * <p>
+ * TODO: Customize class - update intent actions, extra parameters and static
+ * helper methods.
+ */
+public class appMonitorService extends IntentService {
+
     public appMonitorService() {
+        super("appMonitorService");
     }
 
+
+
     @Override
-    public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+    protected void onHandleIntent(Intent intent) {
+        if (intent != null) {
+            int x=1;
+            int y =0;
+            do {
+                SharedPreferences sharedpreferences = getBaseContext().getSharedPreferences("monitor", Context.MODE_PRIVATE);
+                String  mt =  sharedpreferences.getString("screen", null);
+                if (mt.equals("on")) {
+                    startCapture();
+                } else {
+                    this.stopSelf();
+                    break;
+                }
+                y++;
+                logg("Count:"+ Integer.toString(y));
+            }while (x==1);
+logg("Broken");
+            this.stopSelf();
+        }
     }
-    public void onCreate() {
-        logg("Create Monitor Service");
-        super.onCreate();
-    }
-int x = 1;
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        logg("Start Service");
-        startCapture();
-        return START_STICKY;
-    }
+
+    /**
+     * Handle action Foo in the provided background thread with the provided
+     * parameters.
+     */
     private void startCapture(){
+
+
         logg("Start Capture");
-        do {
+
             ActivityManager am = (ActivityManager) getSystemService(this.ACTIVITY_SERVICE);
             List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfo = am.getRunningAppProcesses();
 
             for (int i = 0; i < runningAppProcessInfo.size(); i++) {
+
                 logg(runningAppProcessInfo.get(i).processName);
             }
             try {
-                TimeUnit.SECONDS.sleep(10);
+                TimeUnit.SECONDS.sleep(3);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }while (x==1);
     }
+
+
 }

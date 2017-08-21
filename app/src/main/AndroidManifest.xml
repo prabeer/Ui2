@@ -160,8 +160,7 @@
 
         <service
             android:name=".Services.appMonitorService"
-            android:enabled="true"
-            android:exported="true"></service>
+            android:exported="false"></service>
     </application>
 
 </manifest>
