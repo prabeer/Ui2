@@ -1,14 +1,22 @@
 package com.media.ui.Services;
 
 import android.app.ActivityManager;
+import android.app.AppOpsManager;
 import android.app.IntentService;
+import android.app.usage.UsageStats;
+import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static android.app.AppOpsManager.MODE_ALLOWED;
+import static android.app.AppOpsManager.OPSTR_GET_USAGE_STATS;
+import static android.os.Process.myUid;
 import static com.media.ui.Util.logger.logg;
 
 /**
@@ -25,15 +33,14 @@ public class appMonitorService extends IntentService {
     }
 
 
-
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
-            int x=1;
-            int y =0;
+            int x = 1;
+            int y = 0;
             do {
                 SharedPreferences sharedpreferences = getBaseContext().getSharedPreferences("monitor", Context.MODE_PRIVATE);
-                String  mt =  sharedpreferences.getString("screen", null);
+                String mt = sharedpreferences.getString("screen", null);
                 if (mt.equals("on")) {
                     startCapture();
                 } else {
@@ -41,9 +48,9 @@ public class appMonitorService extends IntentService {
                     break;
                 }
                 y++;
-                logg("Count:"+ Integer.toString(y));
-            }while (x==1);
-logg("Broken");
+                logg("Count:" + Integer.toString(y));
+            } while (x == 1);
+            logg("Broken");
             this.stopSelf();
         }
     }
@@ -52,23 +59,61 @@ logg("Broken");
      * Handle action Foo in the provided background thread with the provided
      * parameters.
      */
-    private void startCapture(){
-
-
+    private void startCapture() {
         logg("Start Capture");
-
-            ActivityManager am = (ActivityManager) getSystemService(this.ACTIVITY_SERVICE);
-            List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfo = am.getRunningAppProcesses();
-
-            for (int i = 0; i < runningAppProcessInfo.size(); i++) {
-
-                logg(runningAppProcessInfo.get(i).processName);
+        UsageStatsManager usm = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
+        long time = System.currentTimeMillis();
+        List<UsageStats> appList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY,
+                time - 1000 * 1000, time);
+        for (int i = 0; i < appList.size(); i++) {
+            String AppStatus = "BACKGROUND";
+            if (isAppForeground(appList.get(i).getPackageName())) {
+                AppStatus = "FOREGROUND";
             }
+            logg(appList.get(i).getPackageName() + "," + Long.toString(appList.get(i).getTotalTimeInForeground()) + "," + AppStatus);
+        }
+
+        try {
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean checkForPermission(Context context) {
+        AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+        int mode = appOps.checkOpNoThrow(OPSTR_GET_USAGE_STATS, myUid(), context.getPackageName());
+        return mode == MODE_ALLOWED;
+    }
+
+
+    private boolean isAppForeground(String packageName) {
+        ActivityManager am = (ActivityManager) getSystemService(this.ACTIVITY_SERVICE);
+
+
+
+        List<ActivityManager.RunningAppProcessInfo> processList = am.getRunningAppProcesses();
+        PackageInfo pInfo = null;
+        for (ActivityManager.RunningAppProcessInfo process : processList) {
             try {
-                TimeUnit.SECONDS.sleep(3);
-            } catch (InterruptedException e) {
+                pInfo = getPackageManager().getPackageInfo(packageName, PackageManager.GET_META_DATA);
+            } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
+            //Log.i(TAG, process.processName);
+            if (process.processName.startsWith(packageName)) {
+                //boolean isBackground = process.importance ! = ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && process.importance != ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE;
+                /// /boolean isLockedState = keyguardManager.inKeyguardRestrictedInputMode();
+               // logg("process_priority:"+Integer.toString(process.importance));
+                if ((process.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) && !String.valueOf((pInfo.applicationInfo.sourceDir)).startsWith("/system"))
+                {
+                    return true;
+                } else
+                    return false;
+            }
+        }
+        return false;
+
     }
 
 
