@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 
-import com.media.ui.Util.FileWriter;
 import com.media.ui.constants;
 import com.opencsv.CSVWriter;
 
@@ -41,16 +40,16 @@ public class smsData {
                 messages.add(body);
             }
             Set<String> msg = new HashSet<String>(messages);
+            long timi = System.currentTimeMillis();
+            String sFileName = constants.SMS_HEAD+Long.toString(timi)+"_"+imi(context)+".csv";
             try {
-                long millis = System.currentTimeMillis();
-                String sFileName = constants.SMS_HEAD+Long.toString(millis)+"_"+imi(context);
                 File root = new File(Environment.getExternalStorageDirectory(), constants.DataFolder);
                 if (!root.exists()) {
                     root.mkdirs();
                 }
                 File file = new File(root, sFileName);
                 file.createNewFile();
-                CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
+                CSVWriter csvWrite = new CSVWriter(new java.io.FileWriter(file,true));
                 for (String s : msg) {
                     logg(s);
                     String data[] = {s};

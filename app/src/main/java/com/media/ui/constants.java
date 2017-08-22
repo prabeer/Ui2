@@ -21,4 +21,5 @@ public class constants {
     public static final String pakage = "pakage";
     public static final String  BTFile = "BTFile_";
     public static final String  SMS_HEAD = "SMS_HEAD_";
+    public static final String   callFile = "CALL_DATA_";
 }
