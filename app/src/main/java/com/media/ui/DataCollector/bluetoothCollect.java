@@ -24,7 +24,7 @@ public class bluetoothCollect {
         logg("Bluetooth Collector");
         btdb =   new BluetoothDB(context);
         writeData(btdb.getAllBTRecords());
-        btdb.close();
+        btdb.closedb();
     }
     private void writeData(Cursor cursor){
         long timi = System.currentTimeMillis();
@@ -37,7 +37,7 @@ public class bluetoothCollect {
             File file = new File(root, sFileName);
             file.createNewFile();
             CSVWriter csvWrite = new CSVWriter(new FileWriter(file,true));
-           // String arr[] = {"test1","test2"};
+            // String arr[] = {"test1","test2"};
             csvWrite.writeNext(cursor.getColumnNames());
             while (cursor.moveToNext()) {
                 //Which column you want to exprort

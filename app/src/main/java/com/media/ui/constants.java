@@ -22,4 +22,8 @@ public class constants {
     public static final String  BTFile = "BTFile_";
     public static final String  SMS_HEAD = "SMS_HEAD_";
     public static final String   callFile = "CALL_DATA_";
+    public static final String   PACKAGE_DETAILS = "PACKAGE_DETAILS_";
+    public static final String UNDERSCORE = "_";
+    public static final String CSVEXT = ".csv";
+    public static final String LowBattFile = "LOWBATT";
 }

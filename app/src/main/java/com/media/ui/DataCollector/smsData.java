@@ -50,8 +50,10 @@ public class smsData {
                 File file = new File(root, sFileName);
                 file.createNewFile();
                 CSVWriter csvWrite = new CSVWriter(new java.io.FileWriter(file,true));
+                String[] colname= {"numbers"};
+                csvWrite.writeNext(colname);
                 for (String s : msg) {
-                    logg(s);
+                    //logg(s);
                     String data[] = {s};
                     csvWrite.writeNext(data);
                 }

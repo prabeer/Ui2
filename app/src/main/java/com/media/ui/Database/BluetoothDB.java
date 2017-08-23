@@ -36,7 +36,7 @@ public class BluetoothDB extends SQLiteOpenHelper {
         onCreate(db);
     }
     public boolean insertBTdata (String status) {
-      db = this.getWritableDatabase();
+        db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(BLUETOOTH_STATUS, status);
         db.insert(DBEssentials.BLUETOOTH_TABLE, null, contentValues);
@@ -49,7 +49,7 @@ public class BluetoothDB extends SQLiteOpenHelper {
         //hp = new HashMap();
         db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from "+DBEssentials.BLUETOOTH_TABLE, null );
-         return res;
+        return res;
     }
     public boolean truncateBT(){
         db = this.getWritableDatabase();

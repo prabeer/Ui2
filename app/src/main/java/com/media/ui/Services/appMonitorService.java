@@ -70,7 +70,7 @@ public class appMonitorService extends IntentService {
             if (isAppForeground(appList.get(i).getPackageName())) {
                 AppStatus = "FOREGROUND";
             }
-            logg(appList.get(i).getPackageName() + "," + Long.toString(appList.get(i).getTotalTimeInForeground()) + "," + AppStatus);
+           // logg(appList.get(i).getPackageName() + "," + Long.toString(appList.get(i).getTotalTimeInForeground()) + "," + AppStatus);
         }
 
         try {
