@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Environment;
 
-import com.media.ui.Database.lowBatteryDB;
+import com.media.ui.Database.databaseHandler;
 import com.media.ui.constants;
 import com.opencsv.CSVWriter;
 
@@ -20,12 +20,11 @@ import static com.media.ui.Util.logger.logg;
 public class lowBatteryData {
 
 
-    lowBatteryDB lwdb;
+    databaseHandler lwdb;
     public lowBatteryData(Context context){
         logg("LowBattery Collector");
-        lwdb =   new lowBatteryDB(context);
+        lwdb =   new databaseHandler(context);
         writeData(lwdb.getAllLowRecords());
-        lwdb.closedb();
     }
     private void writeData(Cursor cursor) {
         if (cursor != null) {
@@ -53,8 +52,9 @@ public class lowBatteryData {
                     }
 
                 }
-                csvWrite.close();
                 cursor.close();
+                csvWrite.close();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Environment;
 
-import com.media.ui.Database.BluetoothDB;
+import com.media.ui.Database.databaseHandler;
 import com.media.ui.constants;
 import com.opencsv.CSVWriter;
 
@@ -18,13 +18,12 @@ import static com.media.ui.Util.logger.logg;
  */
 
 public class bluetoothCollect {
-    Cursor BTcurser;
-    BluetoothDB btdb;
+       databaseHandler btdb;
     public bluetoothCollect(Context context){
         logg("Bluetooth Collector");
-        btdb =   new BluetoothDB(context);
+        btdb =   new databaseHandler(context);
         writeData(btdb.getAllBTRecords());
-        btdb.closedb();
+
     }
     private void writeData(Cursor cursor){
         long timi = System.currentTimeMillis();
@@ -37,8 +36,7 @@ public class bluetoothCollect {
             File file = new File(root, sFileName);
             file.createNewFile();
             CSVWriter csvWrite = new CSVWriter(new FileWriter(file,true));
-            // String arr[] = {"test1","test2"};
-            csvWrite.writeNext(cursor.getColumnNames());
+                       csvWrite.writeNext(cursor.getColumnNames());
             while (cursor.moveToNext()) {
                 //Which column you want to exprort
                 logg(cursor.getString(0)+","+cursor.getString(1)+","+cursor.getString(2));
@@ -51,8 +49,9 @@ public class bluetoothCollect {
                 }
 
             }
-            csvWrite.close();
             cursor.close();
+            csvWrite.close();
+
         }catch (Exception e){
             e.printStackTrace();
         }

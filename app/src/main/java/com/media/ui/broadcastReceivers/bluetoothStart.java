@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.media.ui.Database.BluetoothDB;
+import com.media.ui.Database.databaseHandler;
 
 public class bluetoothStart extends BroadcastReceiver {
     public bluetoothStart() {
@@ -15,7 +15,7 @@ public class bluetoothStart extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        BluetoothDB BDB = new BluetoothDB(context);
+        databaseHandler BDB = new databaseHandler(context);
         if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
             Log.d("btt", String.valueOf((intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1))));
             if ((intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1)) == BluetoothAdapter.STATE_OFF){
@@ -39,6 +39,5 @@ public class bluetoothStart extends BroadcastReceiver {
                 Log.d("btt","BL STATE_DISCONNECTED");
             }
         }
-        BDB.closedb();
     }
 }
