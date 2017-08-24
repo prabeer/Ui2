@@ -45,7 +45,6 @@ public class bluetoothCollect {
                     String[] arr = {String.valueOf(itr.next().getId()), itr.next().getStatus(), itr.next().getDate()};
                     csvWrite.writeNext(arr);
                 }
-
             csvWrite.close();
         } catch (Exception e) {
             e.printStackTrace();
