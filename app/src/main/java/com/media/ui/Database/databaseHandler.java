@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by prabeer.kochar on 24-08-2017.
@@ -53,17 +56,26 @@ public class databaseHandler extends SQLiteOpenHelper {
         return true;
     }
 
-    public Cursor getAllLowRecords() {
+    public List<lowBatteryDB> getAllLowRecords() {
         SQLiteDatabase db;
         db = this.getReadableDatabase();
-        Cursor res = null;
-        try {
-            res = db.rawQuery("select * from " + DBEssentials.LOWBATTERY, null);
-        } catch (Exception e) {
-            e.printStackTrace();
+        List<lowBatteryDB> LowstatusList = new ArrayList<lowBatteryDB>();
+         //hp = new HashMap();
+
+        Cursor res =  db.rawQuery( "select * from "+DBEssentials.LOWBATTERY, null );
+        if (res.moveToFirst()) {
+            do {
+                lowBatteryDB lowdb = new lowBatteryDB();
+                lowdb.setStatus(res.getString(1));
+                lowdb.setId(Integer.parseInt(res.getString(0)));
+                lowdb.setDate(res.getString(2));
+                // Adding contact to list
+                LowstatusList.add(lowdb);
+            } while (res.moveToNext());
         }
+        res.close();
         db.close();
-        return res;
+        return LowstatusList;
     }
 
     public boolean insertBTdata (String status) {
@@ -76,18 +88,34 @@ public class databaseHandler extends SQLiteOpenHelper {
         return true;
     }
 
-    public Cursor getAllBTRecords() {
+    public List<bluetoothDB> getAllBTRecords() {
+        List<bluetoothDB> BTstatusList = new ArrayList<bluetoothDB>();
         SQLiteDatabase db;
         //hp = new HashMap();
         db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from "+DBEssentials.BLUETOOTH_TABLE, null );
+        if (res.moveToFirst()) {
+            do {
+                bluetoothDB btdb = new bluetoothDB();
+                btdb.setStatus(res.getString(1));
+                btdb.setId(Integer.parseInt(res.getString(0)));
+                btdb.setDate(res.getString(2));
+                // Adding contact to list
+                BTstatusList.add(btdb);
+            } while (res.moveToNext());
+        }
+        res.close();
         db.close();
-        return res;
+        return BTstatusList;
     }
     public boolean truncateBT(){
         SQLiteDatabase db;
         db = this.getWritableDatabase();
         db.execSQL("delete from "+DBEssentials.BLUETOOTH_TABLE,null);
         return true;
+    }
+
+    public void closedb(){
+                this.close();
     }
 }

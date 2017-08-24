@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.media.ui.Alarms.installAlarm;
+import com.media.ui.Database.databaseHandler;
 import com.media.ui.Services.registerBroadcastLock;
 import com.media.ui.Util.sharedPreference;
 
@@ -29,6 +30,7 @@ public class bootComplete extends BroadcastReceiver {
             logg( "Alarm Set");
             Intent service = new Intent(context, registerBroadcastLock.class);
             context.startService(service);
+            new databaseHandler(context).closedb();
         }
 
     }
