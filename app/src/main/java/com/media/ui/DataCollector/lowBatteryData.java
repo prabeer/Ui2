@@ -27,9 +27,11 @@ public class lowBatteryData {
         logg("LowBattery Collector");
         lwdb =   new databaseHandler(context);
         writeData(lwdb.getAllLowRecords());
+        lwdb.close();
     }
     private void writeData(List cursor) {
-        if (cursor != null) {
+        if (cursor.size() != 0) {
+
             Iterator<lowBatteryDB> itr = cursor.iterator();
             long timi = System.currentTimeMillis();
             String sFileName = constants.LowBattFile + constants.UNDERSCORE + String.valueOf(timi) + constants.CSVEXT;
@@ -41,10 +43,13 @@ public class lowBatteryData {
                 File file = new File(root, sFileName);
                 file.createNewFile();
                 CSVWriter csvWrite = new CSVWriter(new FileWriter(file, true));
-                while (itr.hasNext()) {
-                    String[] arr = {String.valueOf(itr.next().getId()), itr.next().getStatus(), itr.next().getDate()};
+                 while(itr.hasNext()) {
+                     lowBatteryDB t = itr.next();
+                    logg(String.valueOf(t.getId())+","+ t.getStatus()+","+ t.getDate());
+                    String[] arr = {String.valueOf(t.getId()), t.getStatus(),t.getDate()};
                     csvWrite.writeNext(arr);
                 }
+                csvWrite.flush();
                 csvWrite.close();
 
             } catch (Exception e) {

@@ -57,7 +57,9 @@ public class smsData {
                     String data[] = {s};
                     csvWrite.writeNext(data);
                 }
+                csvWrite.flush();
                 csvWrite.close();
+
             }catch (Exception e){
                 e.printStackTrace();
             }

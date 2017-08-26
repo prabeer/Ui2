@@ -64,7 +64,9 @@ public class packageDetails {
             }
 
         }
+            csvWrite.flush();
             csvWrite.close();
+
         }catch (Exception e){
             e.printStackTrace();
         }

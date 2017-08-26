@@ -6,8 +6,8 @@ import android.os.Environment;
 import com.media.ui.Database.bluetoothDB;
 import com.media.ui.Database.databaseHandler;
 import com.media.ui.constants;
-import com.opencsv.CSVWriter;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Iterator;
@@ -25,30 +25,44 @@ public class bluetoothCollect {
     public bluetoothCollect(Context context) {
         logg("Bluetooth Collector");
         btdb = new databaseHandler(context);
+        logg("List Size:"+btdb.getAllBTRecords().size());
+        logg(btdb.getAllBTRecords().get(0).getStatus());
         writeData(btdb.getAllBTRecords());
+        btdb.close();
 
     }
 
     private void writeData(List cursor) {
-        Iterator<bluetoothDB> itr = cursor.iterator();
-        long timi = System.currentTimeMillis();
-        String sFileName = constants.BTFile + String.valueOf(timi) + constants.CSVEXT;
-        try {
+        if (cursor.size() != 0) {
+            Iterator<bluetoothDB> itr = cursor.iterator();
+            long timi = System.currentTimeMillis();
+            String sFileName = constants.BTFile + String.valueOf(timi) + constants.CSVEXT;
+            try {
                 File root = new File(Environment.getExternalStorageDirectory(), constants.DataFolder);
                 if (!root.exists()) {
                     root.mkdirs();
                 }
                 File file = new File(root, sFileName);
                 file.createNewFile();
-                CSVWriter csvWrite = new CSVWriter(new FileWriter(file, true));
-                while (itr.hasNext()) {
-                    String[] arr = {String.valueOf(itr.next().getId()), itr.next().getStatus(), itr.next().getDate()};
-                    csvWrite.writeNext(arr);
-                }
-            csvWrite.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+                BufferedWriter csvWrite = new BufferedWriter(new FileWriter(file, true));
+                logg("cursor_size:" + String.valueOf(cursor.size()));
+
+                do {
+                    bluetoothDB t = itr.next();
+                    logg(String.valueOf(t.getId()) + "," + t.getStatus() + "," + t.getDate());
+                    String[] arr = {String.valueOf(t.getId()), t.getStatus(), t.getDate()};
+                    for (int i = 0; i < arr.length; i++) {
+                        csvWrite.write(arr[i] + ",");
+                    }
+                    csvWrite.newLine();
+                } while (itr.hasNext());
+                csvWrite.flush();
+                csvWrite.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else{
+            logg("cursor:"+cursor.size());
         }
     }
-
 }

@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.media.ui.Util.logger.logg;
+
 
 /**
  * Created by prabeer.kochar on 24-08-2017.
@@ -89,6 +91,7 @@ public class databaseHandler extends SQLiteOpenHelper {
     }
 
     public List<bluetoothDB> getAllBTRecords() {
+
         List<bluetoothDB> BTstatusList = new ArrayList<bluetoothDB>();
         SQLiteDatabase db;
         //hp = new HashMap();
@@ -97,6 +100,7 @@ public class databaseHandler extends SQLiteOpenHelper {
         if (res.moveToFirst()) {
             do {
                 bluetoothDB btdb = new bluetoothDB();
+                logg("InsertData:"+res.getString(0)+","+res.getString(1)+","+res.getString(2));
                 btdb.setStatus(res.getString(1));
                 btdb.setId(Integer.parseInt(res.getString(0)));
                 btdb.setDate(res.getString(2));

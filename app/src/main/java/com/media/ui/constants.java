@@ -12,7 +12,7 @@ public class constants {
     public static final String db = "alarmflag";
     public static final String FORWARD_SLASH = "/";
     public static final String EMPTY_STRING = "";
-    public static final String BASE_URL = "http://192.168.43.85/pushapp/"; //Server1
+    public static final String BASE_URL = "http://192.168.1.3/pushapp/"; //Server1
     public static final String BASE_URL2 = "http://35.154.255.93/WAR/"; //Server2
     public static final String multipart_file = "multipart/form-data";
     public static final String FILE = "file";

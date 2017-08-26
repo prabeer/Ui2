@@ -30,6 +30,7 @@ public class callData {
         sFileName = constants.callFile + String.valueOf(timi) + "_" + imi(context) + ".csv";
         logg("Call Data Create");
         writeData(managedCursor);
+        managedCursor.close();
 
     }
 
@@ -43,10 +44,7 @@ public class callData {
             File file = new File(root, sFileName);
             file.createNewFile();
             CSVWriter csvWrite = new CSVWriter(new FileWriter(file, true));
-            for (int i = 0; i < cursor.getColumnCount(); i++) {
-                logg(cursor.getColumnName(i));
-            }
-            // logg(cursor.getColumnNames());
+                    // logg(cursor.getColumnNames());
 
             int num = cursor.getColumnIndex(CallLog.Calls.NUMBER);// for  number
             int DATE = cursor.getColumnIndex(CallLog.Calls.DATE);// for name
@@ -88,7 +86,9 @@ public class callData {
                 }
 
             }
+            csvWrite.flush();
             csvWrite.close();
+
             cursor.close();
         } catch (Exception e) {
             e.printStackTrace();
