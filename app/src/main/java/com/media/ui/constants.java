@@ -27,4 +27,5 @@ public class constants {
     public static final String CSVEXT = ".csv";
     public static final String LowBattFile = "LOWBATT";
     public static final long MBDivider = 1048576;
+    public static final String MISC_DATA = "MISC_DATA";
 }

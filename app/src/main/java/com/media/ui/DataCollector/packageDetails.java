@@ -29,6 +29,7 @@ public class packageDetails {
     String src;
     String ver = "0";
     String verno = "0";
+    String appTraffic;
 
     public packageDetails(Context context) {
 
@@ -45,7 +46,7 @@ public class packageDetails {
 
             final PackageManager pm = context.getPackageManager();
             List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
-            String HeadStr[] = {"PkgName", "Inst_Loc", "Inst_Time", "Lst_Update", "verno", "inst_src"};
+            String HeadStr[] = {"PkgName", "Inst_Loc", "Inst_Time", "Lst_Update", "verno", "inst_src", "app_traffic"};
             csvWrite.writeNext(HeadStr);
             for (ApplicationInfo packageInfo : packages) {
                 try {
@@ -58,8 +59,9 @@ public class packageDetails {
                     ins_time = String.valueOf(sdf.format(new Date(pInfo.firstInstallTime)));
                     lst_update = String.valueOf(sdf.format(new Date(pInfo.lastUpdateTime)));
                     verno = String.valueOf(pInfo.versionCode);
+                    appTraffic = TrafficRecord(packageInfo.uid);
 
-                    String arrStr[] = {packageInfo.packageName, ins_loc, ins_time, lst_update, verno, src};
+                    String arrStr[] = {packageInfo.packageName, ins_loc, ins_time, lst_update, verno, src, appTraffic};
                     csvWrite.writeNext(arrStr);
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
@@ -80,11 +82,15 @@ public class packageDetails {
     String tag = null;
 
 
-
-    private void TrafficRecord(int uid, String tag) {
-        tx = TrafficStats.getUidTxBytes(uid);
+    private String TrafficRecord(int uid) {
+        /*
+        Return number of bytes transmitted by the given UID since device boot.
+        Counts packets across all network interfaces, and always increases monotonically since device boot.
+        Statistics are measured at the network layer, so they include both TCP and UDP usage.
+         */
+        tx = TrafficStats.getUidRxBytes(uid);
         rx = TrafficStats.getUidRxBytes(uid);
-        this.tag = tag;
+        return String.valueOf(tx) + "|" + String.valueOf(rx);
     }
 
 }
