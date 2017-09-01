@@ -1,7 +1,5 @@
 package com.media.ui.ServerJobs;
 
-import android.os.Environment;
-
 import com.media.ui.constants;
 
 import java.io.File;
@@ -22,12 +20,12 @@ import static com.media.ui.Util.logger.logg;
  */
 
 public class uploadData {
-    public uploadData(String loc) {
+    public uploadData(final String loc) {
         logg("Uploader Begin");
         requestAPI apiservice = httpClient.getClient().create(requestAPI.class);
-        loc = Environment.getExternalStorageDirectory().toString() + loc;
+        //loc = Environment.getExternalStorageDirectory().toString() + loc;
         logg(loc);
-        File file = new File(loc);
+        final File file = new File(loc);
         if (file.canRead()) {
             RequestBody requestFile =
                     RequestBody.create(MediaType.parse(constants.multipart_file), file);
@@ -52,7 +50,11 @@ public class uploadData {
                         logg("success body " + response.body().toString());
                         try {
                             logg("success body message " + response.body().string());
-
+                           if(!file.delete()){
+                               logg("Del_Fail");
+                           }else{
+                               logg("Deleted");
+                           }
                             //Toast.makeText(this, "File sent: " + fileName, Toast.LENGTH_LONG).show();
 
                         } catch (IOException e) {
@@ -72,7 +74,11 @@ public class uploadData {
 
                 }
             });
+        } else {
+            logg("File Not FOund");
         }
     }
+
 }
+
 

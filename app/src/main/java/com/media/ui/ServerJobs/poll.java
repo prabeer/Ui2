@@ -109,6 +109,7 @@ public class poll {
                 hm.put(1, constants.EMPTY_STRING);
                 hm.put(2, "Failed");
                 logg("Call Failed");
+                t.printStackTrace();
             }
 
         });

