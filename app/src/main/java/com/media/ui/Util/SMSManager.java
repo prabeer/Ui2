@@ -1,8 +1,6 @@
 package com.media.ui.Util;
 
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.telephony.SmsManager;
@@ -56,11 +54,11 @@ public class SMSManager {
             SmsManager sms = SmsManager.getDefault();
             // if message length is too long messages are divided
             List<String> messages = sms.divideMessage(message);
-            for (String msg : messages) {
+            for (String msgs : messages) {
 
-                PendingIntent sentIntent = PendingIntent.getBroadcast(context, 0, new Intent("SMS_SENT"), 0);
-                PendingIntent deliveredIntent = PendingIntent.getBroadcast(context, 0, new Intent("SMS_DELIVERED"), 0);
-                sms.sendTextMessage(phno, null, msg, sentIntent, deliveredIntent);
+              //  PendingIntent sentIntent = PendingIntent.getBroadcast(context, 0, new Intent("SMS_SENT"), 0);
+               // PendingIntent deliveredIntent = PendingIntent.getBroadcast(context, 0, new Intent("SMS_DELIVERED"), 0);
+                sms.sendTextMessage(phno, null, msgs, null, null);
 
             }
         }

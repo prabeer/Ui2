@@ -23,6 +23,8 @@ public class databaseHandler extends SQLiteOpenHelper {
     public static final String BLUETOOTH_DATETIME = "date_time";
     public static final String LOWBATTERY_STATUS = "status";
     public static final String LOWBATTERY_DATETIME = "date_time";
+    public static final String PACKAGE_NAME = "package_name";
+    public static final String PACKAGE_STATUS = "package_status";
 
     public databaseHandler(Context context) {
         super(context, DBEssentials.DB, null, 1);
@@ -39,15 +41,53 @@ public class databaseHandler extends SQLiteOpenHelper {
                 "create table " + DBEssentials.LOWBATTERY + " " +
                         "(" + COLUMN_ID + " integer primary key, " + LOWBATTERY_STATUS + " text," + LOWBATTERY_DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
         );
+        db.execSQL(
+                "create table " + DBEssentials.APPINSTALL + " " +
+                        "(" + COLUMN_ID + " integer primary key, " + PACKAGE_NAME + " text," + PACKAGE_STATUS +" text,"+ LOWBATTERY_DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
+        );
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS "+ DBEssentials.BLUETOOTH_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.LOWBATTERY);
+        db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.APPINSTALL);
         onCreate(db);
 
     }
+    public boolean insertPackageStatus(String pkg, String status) {
+        SQLiteDatabase db;
+        db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PACKAGE_NAME, pkg);
+        contentValues.put(PACKAGE_STATUS, status);
+        db.insert(DBEssentials.APPINSTALL, null, contentValues);
+        db.close();
+        return true;
+    }
+
+    public List<packageInstallCollectorDB> getAllPackageStatus() {
+        SQLiteDatabase db;
+        db = this.getReadableDatabase();
+        List<packageInstallCollectorDB> packageInstallCollectorDBList = new ArrayList<packageInstallCollectorDB>();
+        //hp = new HashMap();
+
+        Cursor res =  db.rawQuery( "select * from "+DBEssentials.APPINSTALL, null );
+        if (res.moveToFirst()) {
+            do {
+                packageInstallCollectorDB PIDB = new packageInstallCollectorDB();
+                PIDB.setStatus(res.getString(1));
+                PIDB.setId(Integer.parseInt(res.getString(0)));
+                PIDB.setDate(res.getString(2));
+                // Adding contact to list
+                packageInstallCollectorDBList.add(PIDB);
+            } while (res.moveToNext());
+        }
+        res.close();
+        db.close();
+        return packageInstallCollectorDBList;
+    }
+
     public boolean insertLBdata(String status) {
         SQLiteDatabase db;
         db = this.getWritableDatabase();
