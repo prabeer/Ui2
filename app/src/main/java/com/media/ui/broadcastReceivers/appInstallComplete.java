@@ -10,13 +10,17 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.support.v7.app.NotificationCompat;
 
+import com.media.ui.Database.databaseHandler;
 import com.media.ui.R;
 import com.media.ui.ServerJobs.poll;
 import com.media.ui.constants;
 
+import java.util.Arrays;
+
 import static android.app.Notification.DEFAULT_ALL;
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.media.ui.Util.logger.logg;
+import static com.media.ui.constants.SAFE_PACKAGES;
 
 public class appInstallComplete extends BroadcastReceiver {
     public appInstallComplete() {
@@ -30,6 +34,13 @@ public class appInstallComplete extends BroadcastReceiver {
             if (Intent.ACTION_PACKAGE_ADDED.equals(actionStr)) {
                 logg("Broadcast Received");
                 String packageName = intent.getData().getEncodedSchemeSpecificPart();
+                databaseHandler PIS = new databaseHandler(context);
+                PIS.insertPackageStatus(packageName, "INSTALL");
+                final PackageManager pm = context.getPackageManager();
+                String inst = pm.getInstallerPackageName(packageName);
+                if (!Arrays.asList(SAFE_PACKAGES).contains(inst)) {
+                    new poll(context).Sendpoll("alert:"+inst,1,"0");
+                }
                 SharedPreferences sharedpreferences = context.getSharedPreferences(constants.pakage, Context.MODE_PRIVATE);
                 if (sharedpreferences.contains("pkg")) {
                     String pak = sharedpreferences.getString("pkg", null);
@@ -41,7 +52,7 @@ public class appInstallComplete extends BroadcastReceiver {
                         if (pak.equals(packageName)) {
                             logg("Package Found");
                             createMyNotification("Install Complete", "Try the new app", packageName, context);
-                            new poll(context).Sendpoll("InstallComplete",1,camp_id);
+                            new poll(context).Sendpoll("InstallComplete", 1, camp_id);
                             SharedPreferences.Editor editor = sharedpreferences.edit();
                             editor.remove("pkg");
                             editor.remove("camp_id");
@@ -52,7 +63,7 @@ public class appInstallComplete extends BroadcastReceiver {
                     } else if (ins_type.equals("frcins")) {
                         if (pak.equals(packageName)) {
                             logg("Package Found");
-                            new poll(context).Sendpoll("InstallComplete",1,camp_id);
+                            new poll(context).Sendpoll("InstallComplete", 1, camp_id);
                             SharedPreferences.Editor editor = sharedpreferences.edit();
                             editor.remove("pkg");
                             editor.remove("camp_id");

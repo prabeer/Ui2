@@ -28,4 +28,5 @@ public class constants {
     public static final String LowBattFile = "LOWBATT";
     public static final long MBDivider = 1048576;
     public static final String MISC_DATA = "MISC_DATA";
+    public static final String[] SAFE_PACKAGES = new String[] {"com.android.vendor","com.media.ui"};
 }
