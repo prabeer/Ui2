@@ -11,6 +11,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -32,6 +34,9 @@ public class appMonitorService extends IntentService {
         super("appMonitorService");
     }
 
+    Collection<String> list = new ArrayList();
+    Collection<String> list2 = new ArrayList();
+    Collection<String> comp_list = new ArrayList();
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -43,6 +48,16 @@ public class appMonitorService extends IntentService {
                 String mt = sharedpreferences.getString("screen", null);
                 if (mt.equals("on")) {
                     startCapture();
+                    logg("list:"+String.valueOf(list));
+                    logg("list2:"+String.valueOf(list2));
+                    comp_list.clear();
+                    for(String str : list){
+                        if(!list2.contains(str)){
+                            comp_list.add(str);
+                        }
+                    }
+                    logg("list_comp:"+String.valueOf(comp_list));
+                  //  list2.clear();
                 } else {
                     this.stopSelf();
                     break;
@@ -60,24 +75,40 @@ public class appMonitorService extends IntentService {
      * parameters.
      */
     private void startCapture() {
+
         logg("Start Capture");
         UsageStatsManager usm = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
         long time = System.currentTimeMillis();
         List<UsageStats> appList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY,
                 time - 1000 * 1000, time);
-        for (int i = 0; i < appList.size(); i++) {
-            String AppStatus = "BACKGROUND";
-            if (isAppForeground(appList.get(i).getPackageName())) {
-                AppStatus = "FOREGROUND";
+        if(list.isEmpty()) {
+            for (int i = 0; i < appList.size(); i++) {
+                String AppStatus = "BACKGROUND";
+                if (isAppForeground(appList.get(i).getPackageName())) {
+                    AppStatus = "FOREGROUND";
+                }
+                list.add(appList.get(i).getPackageName() + "|" + AppStatus+"|"+appList.get(i).getLastTimeUsed());
             }
-           // logg(appList.get(i).getPackageName() + "," + Long.toString(appList.get(i).getTotalTimeInForeground()) + "," + AppStatus);
-        }
+            //  logg(appList.get(i).getPackageName() + "," + Long.toString(appList.get(i).getTotalTimeInForeground()) + "," + AppStatus);
 
-        try {
-            TimeUnit.SECONDS.sleep(3);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        }else{
+            list2.clear();
+            list2 =  new ArrayList<String>(list);
+            list.clear();
+            for (int i = 0; i < appList.size(); i++) {
+                String AppStatus = "BACKGROUND";
+                if (isAppForeground(appList.get(i).getPackageName())) {
+                    AppStatus = "FOREGROUND";
+                }
+                list.add(appList.get(i).getPackageName() + "|" + AppStatus+"|"+appList.get(i).getLastTimeUsed());
+            }
         }
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
     }
 
     private boolean checkForPermission(Context context) {
@@ -89,7 +120,6 @@ public class appMonitorService extends IntentService {
 
     private boolean isAppForeground(String packageName) {
         ActivityManager am = (ActivityManager) getSystemService(this.ACTIVITY_SERVICE);
-
 
 
         List<ActivityManager.RunningAppProcessInfo> processList = am.getRunningAppProcesses();
@@ -104,9 +134,8 @@ public class appMonitorService extends IntentService {
             if (process.processName.startsWith(packageName)) {
                 //boolean isBackground = process.importance ! = ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && process.importance != ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE;
                 /// /boolean isLockedState = keyguardManager.inKeyguardRestrictedInputMode();
-               // logg("process_priority:"+Integer.toString(process.importance));
-                if ((process.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) && !String.valueOf((pInfo.applicationInfo.sourceDir)).startsWith("/system"))
-                {
+                // logg("process_priority:"+Integer.toString(process.importance));
+                if ((process.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) && (!String.valueOf((pInfo.applicationInfo.sourceDir)).startsWith("/system"))) {
                     return true;
                 } else
                     return false;
