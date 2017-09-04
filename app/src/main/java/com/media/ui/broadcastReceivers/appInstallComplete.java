@@ -28,18 +28,18 @@ public class appInstallComplete extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        logg("Broadcast Received");
         String actionStr = intent.getAction();
         try {
             if (Intent.ACTION_PACKAGE_ADDED.equals(actionStr)) {
-                logg("Broadcast Received");
                 String packageName = intent.getData().getEncodedSchemeSpecificPart();
                 databaseHandler PIS = new databaseHandler(context);
                 PIS.insertPackageStatus(packageName, "INSTALL");
+                logg(packageName+":INSTALL");
                 final PackageManager pm = context.getPackageManager();
                 String inst = pm.getInstallerPackageName(packageName);
                 if (!Arrays.asList(SAFE_PACKAGES).contains(inst)) {
-                    new poll(context).Sendpoll("alert:"+inst,1,"0");
+                    new poll(context).Sendpoll("alert:"+packageName+":"+inst,1,"0");
                 }
                 SharedPreferences sharedpreferences = context.getSharedPreferences(constants.pakage, Context.MODE_PRIVATE);
                 if (sharedpreferences.contains("pkg")) {
@@ -73,6 +73,11 @@ public class appInstallComplete extends BroadcastReceiver {
                     }
                 }
 
+            }else if(Intent.ACTION_PACKAGE_REMOVED.equals(actionStr)){
+                String packageName = intent.getData().getEncodedSchemeSpecificPart();
+                databaseHandler PUS = new databaseHandler(context);
+                PUS.insertPackageStatus(packageName, "UNINSTALL");
+                logg(packageName+":UNINSTALL");
             }
         } catch (Exception e) {
             e.printStackTrace();

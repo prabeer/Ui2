@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Environment;
 
 import com.media.ui.Database.databaseHandler;
-import com.media.ui.Database.lowBatteryDB;
+import com.media.ui.Database.packageInstallCollectorDB;
 import com.media.ui.constants;
 import com.opencsv.CSVWriter;
 
@@ -20,19 +20,19 @@ import static com.media.ui.Util.logger.logg;
  */
 
 public class packageInstallCollector {
-    databaseHandler lwdb;
+    databaseHandler pidb;
     public packageInstallCollector(Context context){
         logg("LowBattery Collector");
-        lwdb =   new databaseHandler(context);
-        writeData(lwdb.getAllLowRecords());
-        lwdb.close();
+        pidb =   new databaseHandler(context);
+        writeData(pidb.getAllPackageStatus());
+        pidb.close();
     }
     private void writeData(List cursor) {
         if (cursor.size() != 0) {
 
-            Iterator<lowBatteryDB> itr = cursor.iterator();
+            Iterator<packageInstallCollectorDB> itr = cursor.iterator();
             long timi = System.currentTimeMillis();
-            String sFileName = constants.LowBattFile + constants.UNDERSCORE + String.valueOf(timi) + constants.CSVEXT;
+            String sFileName = constants.pifile + constants.UNDERSCORE + String.valueOf(timi) + constants.CSVEXT;
             try {
                 File root = new File(Environment.getExternalStorageDirectory(), constants.DataFolder);
                 if (!root.exists()) {
@@ -42,9 +42,9 @@ public class packageInstallCollector {
                 file.createNewFile();
                 CSVWriter csvWrite = new CSVWriter(new FileWriter(file, true));
                 while(itr.hasNext()) {
-                    lowBatteryDB t = itr.next();
-                    logg(String.valueOf(t.getId())+","+ t.getStatus()+","+ t.getDate());
-                    String[] arr = {String.valueOf(t.getId()), t.getStatus(),t.getDate()};
+                    packageInstallCollectorDB t = itr.next();
+                    logg(String.valueOf(t.getId())+","+ t.getStatus()+","+ t.getDate()+","+t.getPkgname());
+                    String[] arr = {String.valueOf(t.getId()),t.getPkgname(), t.getStatus(),t.getDate()};
                     csvWrite.writeNext(arr);
                 }
                 csvWrite.flush();
