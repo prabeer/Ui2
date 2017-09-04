@@ -10,5 +10,6 @@ public class DBEssentials {
     public static final String NETWORK_CHANGE_TABLE = "NCT";
     public static final String LOWBATTERY = "LBT";
     public static final String APPINSTALL = "APPINSTALL";
+    public static final String APPMONITOR = "APPMONITOR";
 
 }

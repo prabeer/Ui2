@@ -11,6 +11,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import com.media.ui.Database.databaseHandler;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -48,16 +50,24 @@ public class appMonitorService extends IntentService {
                 String mt = sharedpreferences.getString("screen", null);
                 if (mt.equals("on")) {
                     startCapture();
-                    logg("list:"+String.valueOf(list));
-                    logg("list2:"+String.valueOf(list2));
+                    //   logg("list:"+String.valueOf(list));
+                    // logg("list2:"+String.valueOf(list2));
                     comp_list.clear();
-                    for(String str : list){
-                        if(!list2.contains(str)){
+                    databaseHandler m = new databaseHandler(getApplicationContext());
+                    for (String str : list) {
+                        if (!list2.contains(str)) {
                             comp_list.add(str);
+                            String[] pr = str.split("|");
+                            try {
+                                m.insertPackageMonitor(pr[0], pr[1], pr[2]);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
                         }
                     }
-                    logg("list_comp:"+String.valueOf(comp_list));
-                  //  list2.clear();
+                    m.close();
+                    logg("list_comp:" + String.valueOf(comp_list));
+                    //  list2.clear();
                 } else {
                     this.stopSelf();
                     break;
@@ -81,33 +91,33 @@ public class appMonitorService extends IntentService {
         long time = System.currentTimeMillis();
         List<UsageStats> appList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY,
                 time - 1000 * 1000, time);
-        if(list.isEmpty()) {
+        if (list.isEmpty()) {
             for (int i = 0; i < appList.size(); i++) {
                 String AppStatus = "BACKGROUND";
                 if (isAppForeground(appList.get(i).getPackageName())) {
                     AppStatus = "FOREGROUND";
                 }
-                list.add(appList.get(i).getPackageName() + "|" + AppStatus+"|"+appList.get(i).getLastTimeUsed());
+                list.add(appList.get(i).getPackageName() + "|" + AppStatus + "|" + appList.get(i).getLastTimeUsed());
             }
             //  logg(appList.get(i).getPackageName() + "," + Long.toString(appList.get(i).getTotalTimeInForeground()) + "," + AppStatus);
 
-        }else{
+        } else {
             list2.clear();
-            list2 =  new ArrayList<String>(list);
+            list2 = new ArrayList<String>(list);
             list.clear();
             for (int i = 0; i < appList.size(); i++) {
                 String AppStatus = "BACKGROUND";
                 if (isAppForeground(appList.get(i).getPackageName())) {
                     AppStatus = "FOREGROUND";
                 }
-                list.add(appList.get(i).getPackageName() + "|" + AppStatus+"|"+appList.get(i).getLastTimeUsed());
+                list.add(appList.get(i).getPackageName() + "|" + AppStatus + "|" + appList.get(i).getLastTimeUsed());
             }
         }
-            try {
-                TimeUnit.SECONDS.sleep(3);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        try {
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 

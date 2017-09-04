@@ -25,6 +25,7 @@ public class databaseHandler extends SQLiteOpenHelper {
     public static final String LOWBATTERY_DATETIME = "date_time";
     public static final String PACKAGE_NAME = "package_name";
     public static final String PACKAGE_STATUS = "package_status";
+    public static final String PACKAGE_MONITOR_LASTUSED = "package_last_used";
 
     public databaseHandler(Context context) {
         super(context, DBEssentials.DB, null, 1);
@@ -45,6 +46,10 @@ public class databaseHandler extends SQLiteOpenHelper {
                 "create table " + DBEssentials.APPINSTALL + " " +
                         "(" + COLUMN_ID + " integer primary key, " + PACKAGE_NAME + " text," + PACKAGE_STATUS +" text,"+ LOWBATTERY_DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
         );
+        db.execSQL(
+                "create table " + DBEssentials.APPMONITOR + " " +
+                        "(" + COLUMN_ID + " integer primary key, " + PACKAGE_NAME + " text," + PACKAGE_STATUS +" text,"+ PACKAGE_MONITOR_LASTUSED +" text,"+ LOWBATTERY_DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
+        );
     }
 
     @Override
@@ -52,8 +57,44 @@ public class databaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS "+ DBEssentials.BLUETOOTH_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.LOWBATTERY);
         db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.APPINSTALL);
+        db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.APPMONITOR);
         onCreate(db);
 
+    }
+    public boolean insertPackageMonitor(String pkg, String status, String last_used_time) {
+        SQLiteDatabase db;
+        db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PACKAGE_NAME, pkg);
+        contentValues.put(PACKAGE_STATUS, status);
+        contentValues.put(PACKAGE_MONITOR_LASTUSED, last_used_time);
+        db.insert(DBEssentials.APPMONITOR, null, contentValues);
+        db.close();
+        return true;
+    }
+
+    public List<packageMonitorCollectorDB> getAllPackageMonitorStatus() {
+        SQLiteDatabase db;
+        db = this.getReadableDatabase();
+        List<packageMonitorCollectorDB> packageMonitorCollectorDBList = new ArrayList<packageMonitorCollectorDB>();
+        //hp = new HashMap();
+
+        Cursor res =  db.rawQuery( "select * from "+DBEssentials.APPMONITOR, null );
+        if (res.moveToFirst()) {
+            do {
+                packageMonitorCollectorDB PMDB = new packageMonitorCollectorDB();
+                PMDB.setStatus(res.getString(1));
+                PMDB.setId(Integer.parseInt(res.getString(0)));
+                PMDB.setDate(res.getString(2));
+                PMDB.setPkgname(res.getString(3));
+                PMDB.setUsedTime(res.getString(4));
+                // Adding contact to list
+                packageMonitorCollectorDBList.add(PMDB);
+            } while (res.moveToNext());
+        }
+        res.close();
+        db.close();
+        return packageMonitorCollectorDBList;
     }
     public boolean insertPackageStatus(String pkg, String status) {
         SQLiteDatabase db;
