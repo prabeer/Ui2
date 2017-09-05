@@ -3,6 +3,7 @@ package com.media.ui.DataCollector;
 import android.content.Context;
 import android.os.Environment;
 
+import com.media.ui.Database.DBEssentials;
 import com.media.ui.Database.databaseHandler;
 import com.media.ui.Database.packageInstallCollectorDB;
 import com.media.ui.constants;
@@ -14,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static com.media.ui.Util.logger.logg;
+import static com.media.ui.Util.utility.imi;
 
 /**
  * Created by prabeer.kochar on 01-09-2017.
@@ -24,15 +26,15 @@ public class packageInstallCollector {
     public packageInstallCollector(Context context){
         logg("LowBattery Collector");
         pidb =   new databaseHandler(context);
-        writeData(pidb.getAllPackageStatus());
+        writeData(pidb.getAllPackageStatus(),context);
         pidb.close();
     }
-    private void writeData(List cursor) {
+    private void writeData(List cursor,Context context) {
         if (cursor.size() != 0) {
 
             Iterator<packageInstallCollectorDB> itr = cursor.iterator();
             long timi = System.currentTimeMillis();
-            String sFileName = constants.pifile + constants.UNDERSCORE + String.valueOf(timi) + constants.CSVEXT;
+            String sFileName = DBEssentials.APPINSTALL+constants.UNDERSCORE + String.valueOf(timi)+constants.UNDERSCORE+imi(context) + constants.CSVEXT;
             try {
                 File root = new File(Environment.getExternalStorageDirectory(), constants.DataFolder);
                 if (!root.exists()) {

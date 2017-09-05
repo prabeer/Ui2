@@ -25,6 +25,7 @@ public class databaseHandler extends SQLiteOpenHelper {
     public static final String PACKAGE_NAME = "package_name";
     public static final String PACKAGE_STATUS = "package_status";
     public static final String PACKAGE_MONITOR_LASTUSED = "package_last_used";
+    public static final String NETWORKTYPE = "network_type";
 
     public databaseHandler(Context context) {
         super(context, DBEssentials.DB, null, 1);
@@ -61,6 +62,10 @@ public class databaseHandler extends SQLiteOpenHelper {
                 "create table " + DBEssentials.HOME_KEY + " " +
                         "(" + COLUMN_ID + " integer primary key, " + STATUS + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
         );
+        db.execSQL(
+                "create table " + DBEssentials.NETWORK_CHANGE_TABLE + " " +
+                        "(" + COLUMN_ID + " integer primary key, " + NETWORKTYPE + " text," + STATUS + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
+        );
     }
 
     @Override
@@ -72,9 +77,95 @@ public class databaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.PHONELOCK);
         db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.EAR_JACK);
         db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.HOME_KEY);
+        db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.NETWORK_CHANGE_TABLE);
         onCreate(db);
-
     }
+
+    /*
+************************** HOME KEY DATA ******************
+ */
+    public boolean insertHOMEKEY(String status) {
+        if (checkTable(DBEssentials.HOME_KEY)) {
+            SQLiteDatabase db;
+            db = this.getWritableDatabase();
+            try {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(STATUS, status);
+                // logg("APPMONITOR Insert");
+                db.insert(DBEssentials.HOME_KEY, null, contentValues);
+            } catch (SQLiteException e) {
+                e.printStackTrace();
+                return false;
+            } finally {
+                db.close();
+            }
+
+        } else {
+            SQLiteDatabase db;
+            db = this.getWritableDatabase();
+            try {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(STATUS, status);
+                // logg("APPMONITOR Create Table");
+                db.execSQL(
+                        "create table " + DBEssentials.HOME_KEY + " " +
+                                "(" + COLUMN_ID + " integer primary key, " + STATUS + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
+                );
+                db.insert(DBEssentials.HOME_KEY, null, contentValues);
+            } catch (SQLiteException e) {
+
+                e.printStackTrace();
+                return false;
+            } finally {
+                db.close();
+            }
+
+        }
+        return true;
+    }
+
+    public List<homekeyDB> getAllHOMEKEY() {
+
+        List<homekeyDB> homekeyDBList = new ArrayList<homekeyDB>();
+        SQLiteDatabase db;
+        //hp = new HashMap();
+        db = this.getReadableDatabase();
+        try {
+            Cursor res = db.rawQuery("select * from " + DBEssentials.HOME_KEY, null);
+            if (res.moveToFirst()) {
+                do {
+                    homekeyDB btdb = new homekeyDB();
+                    logg("InsertData:" + res.getString(0) + "," + res.getString(1) + "," + res.getString(2));
+                    btdb.setStatus(res.getString(1));
+                    btdb.setId(Integer.parseInt(res.getString(0)));
+                    btdb.setDate(res.getString(2));
+                    // Adding contact to list
+                    homekeyDBList.add(btdb);
+                } while (res.moveToNext());
+            }
+            res.close();
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+        return homekeyDBList;
+    }
+
+    public boolean deleteRecordsHOMEKEY(String date) {
+        SQLiteDatabase db;
+        db = this.getWritableDatabase();
+        try {
+            db.rawQuery("delete from " + DBEssentials.HOME_KEY + " where " + DATETIME + " < datetime(" + date + ")", null);
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+        return true;
+    }
+
+//---------------------------------//----------------------------------
 
     /*
     ************************** EAR JACK DATA ******************
@@ -99,13 +190,14 @@ public class databaseHandler extends SQLiteOpenHelper {
             SQLiteDatabase db;
             db = this.getWritableDatabase();
             try {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(STATUS, status);
-                // logg("APPMONITOR Create Table");
                 db.execSQL(
                         "create table " + DBEssentials.EAR_JACK + " " +
                                 "(" + COLUMN_ID + " integer primary key, " + STATUS + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
                 );
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(STATUS, status);
+                // logg("APPMONITOR Create Table");
+
                 db.insert(DBEssentials.EAR_JACK, null, contentValues);
             } catch (SQLiteException e) {
 
@@ -518,6 +610,7 @@ public class databaseHandler extends SQLiteOpenHelper {
                 db.insert(DBEssentials.BLUETOOTH_TABLE, null, contentValues);
             }catch (SQLiteException e){
                 e.printStackTrace();
+                return false;
             }finally {
                 db.close();
             }
@@ -526,11 +619,16 @@ public class databaseHandler extends SQLiteOpenHelper {
             SQLiteDatabase db;
             db = this.getWritableDatabase();
             try {
+                db.execSQL(
+                        "create table " + DBEssentials.BLUETOOTH_TABLE + " " +
+                                "(" + COLUMN_ID + " integer primary key, " + STATUS + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
+                );
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(STATUS, status);
                 db.insert(DBEssentials.BLUETOOTH_TABLE, null, contentValues);
             }catch (SQLiteException e){
                 e.printStackTrace();
+                return false;
             }finally {
                 db.close();
             }
@@ -544,27 +642,56 @@ public class databaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db;
         //hp = new HashMap();
         db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("select * from " + DBEssentials.BLUETOOTH_TABLE, null);
-        if (res.moveToFirst()) {
-            do {
-                bluetoothDB btdb = new bluetoothDB();
-                logg("InsertData:" + res.getString(0) + "," + res.getString(1) + "," + res.getString(2));
-                btdb.setStatus(res.getString(1));
-                btdb.setId(Integer.parseInt(res.getString(0)));
-                btdb.setDate(res.getString(2));
-                // Adding contact to list
-                BTstatusList.add(btdb);
-            } while (res.moveToNext());
+        try {
+            Cursor res = db.rawQuery("select * from " + DBEssentials.BLUETOOTH_TABLE, null);
+            if (res.moveToFirst()) {
+                do {
+                    bluetoothDB btdb = new bluetoothDB();
+                    logg("InsertData:" + res.getString(0) + "," + res.getString(1) + "," + res.getString(2));
+                    btdb.setStatus(res.getString(1));
+                    btdb.setId(Integer.parseInt(res.getString(0)));
+                    btdb.setDate(res.getString(2));
+                    // Adding contact to list
+                    BTstatusList.add(btdb);
+                } while (res.moveToNext());
+            }
+            res.close();
+        }catch (SQLiteException e){
+            e.printStackTrace();
+        }finally {
+            db.close();
         }
-        res.close();
-        db.close();
+
         return BTstatusList;
     }
 
-    public boolean truncateBT() {
+
+
+    public boolean deleteRecordBTRecords(String date) {
+        SQLiteDatabase db;
+        db = this.getWritableDatabase();
+        try {
+            db.rawQuery("delete from " + DBEssentials.BLUETOOTH_TABLE + " where " + DATETIME + " < datetime(" + date + ")", null);
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            db.close();
+        }
+        return true;
+    }
+
+    public boolean truncateAllTables() {
         SQLiteDatabase db;
         db = this.getWritableDatabase();
         db.execSQL("delete from " + DBEssentials.BLUETOOTH_TABLE, null);
+        db.execSQL("delete from " + DBEssentials.APPINSTALL, null);
+        db.execSQL("delete from " + DBEssentials.LOWBATTERY, null);
+        db.execSQL("delete from " + DBEssentials.APPMONITOR, null);
+        db.execSQL("delete from " + DBEssentials.PHONELOCK, null);
+        db.execSQL("delete from " + DBEssentials.EAR_JACK, null);
+        db.execSQL("delete from " + DBEssentials.NETWORK_CHANGE_TABLE, null);
+        db.execSQL("delete from " + DBEssentials.HOME_KEY, null);
         return true;
     }
 
