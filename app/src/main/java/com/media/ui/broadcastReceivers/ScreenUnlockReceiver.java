@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import com.media.ui.Database.databaseHandler;
 import com.media.ui.Services.appMonitorService;
 
 import static com.media.ui.Util.logger.logg;
@@ -24,12 +25,14 @@ public class ScreenUnlockReceiver extends BroadcastReceiver {
             editor.commit();
             Intent service = new Intent(context, appMonitorService.class);
             context.startService(service);
+            new databaseHandler(context).insertLockMonitor("UNLOCK");
             logg("unlock");
         } else if (Intent.ACTION_SCREEN_OFF.equals(action)) {
             SharedPreferences  sharedpreferences =  context.getSharedPreferences("monitor", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString("screen", "off");
             editor.commit();
+            new databaseHandler(context).insertLockMonitor("LOCK");
             logg("lock");
         }
 

@@ -60,13 +60,15 @@ public class appMonitorService extends IntentService {
                             comp_list.add(str);
                         }
                     }
-                    databaseHandler m = new databaseHandler(this);
+
                     for (String ls : comp_list) {
                         String[] l = ls.split(Pattern.quote("|"));
                         logg(l[0] + "~" + l[1] + "~" + l[2]);
+                        databaseHandler m = new databaseHandler(this);
                         m.insertPackageMonitor(l[0], l[1], l[2]);
+                        m.close();
                     }
-                    m.close();
+
                     logg("list_comp:" + String.valueOf(comp_list));
                     //  list2.clear();
                 } else {
