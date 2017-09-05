@@ -26,6 +26,7 @@ public class registerBroadcastLock extends Service {
         super.onCreate();
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_HEADSET_PLUG);
          mReceiver = new ScreenUnlockReceiver();
         registerReceiver(mReceiver, filter);
     }
@@ -34,7 +35,6 @@ public class registerBroadcastLock extends Service {
         logg("Start Service");
         return START_STICKY;
     }
-
 
 
     @Override

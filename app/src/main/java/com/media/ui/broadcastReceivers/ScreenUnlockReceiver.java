@@ -32,5 +32,17 @@ public class ScreenUnlockReceiver extends BroadcastReceiver {
             editor.commit();
             logg("lock");
         }
+
+        if(Intent.ACTION_HEADSET_PLUG.equals(action)){
+            int state = intent.getIntExtra("state", -1);
+            switch (state) {
+                case 0:
+                    logg( "Headset unplugged");
+                    break;
+                case 1:
+                   logg( "Headset plugged");
+                    break;
+            }
+        }
     }
 }

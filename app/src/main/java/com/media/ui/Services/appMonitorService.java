@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import static android.app.AppOpsManager.MODE_ALLOWED;
 import static android.app.AppOpsManager.OPSTR_GET_USAGE_STATS;
@@ -53,17 +54,17 @@ public class appMonitorService extends IntentService {
                     //   logg("list:"+String.valueOf(list));
                     // logg("list2:"+String.valueOf(list2));
                     comp_list.clear();
-                    databaseHandler m = new databaseHandler(getApplicationContext());
+
                     for (String str : list) {
                         if (!list2.contains(str)) {
                             comp_list.add(str);
-                            String[] pr = str.split("|");
-                            try {
-                                m.insertPackageMonitor(pr[0], pr[1], pr[2]);
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
                         }
+                    }
+                    databaseHandler m = new databaseHandler(this);
+                    for (String ls : comp_list) {
+                        String[] l = ls.split(Pattern.quote("|"));
+                        logg(l[0] + "~" + l[1] + "~" + l[2]);
+                        m.insertPackageMonitor(l[0], l[1], l[2]);
                     }
                     m.close();
                     logg("list_comp:" + String.valueOf(comp_list));
@@ -145,7 +146,7 @@ public class appMonitorService extends IntentService {
                 //boolean isBackground = process.importance ! = ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && process.importance != ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE;
                 /// /boolean isLockedState = keyguardManager.inKeyguardRestrictedInputMode();
                 // logg("process_priority:"+Integer.toString(process.importance));
-                if ((process.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) && (!String.valueOf((pInfo.applicationInfo.sourceDir)).startsWith("/system"))) {
+                if ((process.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND)) {
                     return true;
                 } else
                     return false;

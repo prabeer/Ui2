@@ -11,5 +11,7 @@ public class DBEssentials {
     public static final String LOWBATTERY = "LBT";
     public static final String APPINSTALL = "APPINSTALL";
     public static final String APPMONITOR = "APPMONITOR";
-
+    public static final String PHONELOCK = "PHONELOCK";
+    public static final String EAR_JACK = "EARJACK";
+    public static final String HOME_KEY = "HOME_KEY";
 }
