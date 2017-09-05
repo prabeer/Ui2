@@ -20,14 +20,10 @@ public class databaseHandler extends SQLiteOpenHelper {
 
     public static final String COLUMN_ID = "id";
     public static final String STATUS = "status";
-    public static final String BLUETOOTH_STATUS = "status";
-    public static final String BLUETOOTH_DATETIME = "date_time";
-    public static final String LOWBATTERY_STATUS = "status";
-    public static final String LOWBATTERY_DATETIME = "date_time";
+    public static final String DATETIME = "date_time";
     public static final String PACKAGE_NAME = "package_name";
     public static final String PACKAGE_STATUS = "package_status";
     public static final String PACKAGE_MONITOR_LASTUSED = "package_last_used";
-    public static final String PHONE_LOCK_STATE = "Phone_Lock";
 
     public databaseHandler(Context context) {
         super(context, DBEssentials.DB, null, 1);
@@ -38,23 +34,27 @@ public class databaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(
                 "create table " + DBEssentials.BLUETOOTH_TABLE + " " +
-                        "(" + COLUMN_ID + " integer primary key, " + BLUETOOTH_STATUS + " text," + BLUETOOTH_DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
+                        "(" + COLUMN_ID + " integer primary key, " + STATUS + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
         );
         db.execSQL(
                 "create table " + DBEssentials.LOWBATTERY + " " +
-                        "(" + COLUMN_ID + " integer primary key, " + LOWBATTERY_STATUS + " text," + LOWBATTERY_DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
+                        "(" + COLUMN_ID + " integer primary key, " + STATUS + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
         );
         db.execSQL(
                 "create table " + DBEssentials.APPINSTALL + " " +
-                        "(" + COLUMN_ID + " integer primary key, " + PACKAGE_NAME + " text," + PACKAGE_STATUS + " text," + LOWBATTERY_DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
+                        "(" + COLUMN_ID + " integer primary key, " + PACKAGE_NAME + " text," + PACKAGE_STATUS + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
         );
         db.execSQL(
                 "create table " + DBEssentials.APPMONITOR + " " +
-                        "(" + COLUMN_ID + " integer primary key, " + PACKAGE_NAME + " text," + PACKAGE_STATUS + " text," + PACKAGE_MONITOR_LASTUSED + " text," + LOWBATTERY_DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
+                        "(" + COLUMN_ID + " integer primary key, " + PACKAGE_NAME + " text," + PACKAGE_STATUS + " text," + PACKAGE_MONITOR_LASTUSED + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
         );
         db.execSQL(
                 "create table " + DBEssentials.PHONELOCK + " " +
-                        "(" + COLUMN_ID + " integer primary key, " + BLUETOOTH_STATUS + " text," + BLUETOOTH_DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
+                        "(" + COLUMN_ID + " integer primary key, " + STATUS + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
+        );
+        db.execSQL(
+                "create table " + DBEssentials.EAR_JACK + " " +
+                        "(" + COLUMN_ID + " integer primary key, " + STATUS + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
         );
     }
 
@@ -65,9 +65,61 @@ public class databaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.APPINSTALL);
         db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.APPMONITOR);
         db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.PHONELOCK);
+        db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.EAR_JACK);
         onCreate(db);
 
     }
+
+    public boolean insertEARJACK(String status) {
+        SQLiteDatabase db;
+        db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(STATUS, status);
+        try {
+            if(checkTable(DBEssentials.EAR_JACK)) {
+                // logg("APPMONITOR Insert");
+                db.insert(DBEssentials.EAR_JACK, null, contentValues);
+            }else{
+                // logg("APPMONITOR Create Table");
+                db.execSQL(
+                        "create table " + DBEssentials.EAR_JACK + " " +
+                                "(" + COLUMN_ID + " integer primary key, " + STATUS + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
+                );
+                db.insert(DBEssentials.EAR_JACK, null, contentValues);
+            }
+        }catch (Exception e){
+            e.getMessage();
+        }finally {
+            db.close();
+        }
+
+        db.close();
+        return true;
+    }
+
+    public List<lockUnlockDB> getAllEARJACK() {
+
+        List<lockUnlockDB> lockUnlockDBList = new ArrayList<lockUnlockDB>();
+        SQLiteDatabase db;
+        //hp = new HashMap();
+        db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select * from " + DBEssentials.EAR_JACK, null);
+        if (res.moveToFirst()) {
+            do {
+                lockUnlockDB btdb = new lockUnlockDB();
+                logg("InsertData:" + res.getString(0) + "," + res.getString(1) + "," + res.getString(2));
+                btdb.setStatus(res.getString(1));
+                btdb.setId(Integer.parseInt(res.getString(0)));
+                btdb.setDate(res.getString(2));
+                // Adding contact to list
+                lockUnlockDBList.add(btdb);
+            } while (res.moveToNext());
+        }
+        res.close();
+        db.close();
+        return lockUnlockDBList;
+    }
+    
     public boolean insertLockMonitor(String status) {
         SQLiteDatabase db;
         db = this.getWritableDatabase();
@@ -81,7 +133,7 @@ public class databaseHandler extends SQLiteOpenHelper {
                // logg("APPMONITOR Create Table");
                 db.execSQL(
                         "create table " + DBEssentials.PHONELOCK + " " +
-                                "(" + COLUMN_ID + " integer primary key, " + BLUETOOTH_STATUS + " text," + BLUETOOTH_DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
+                                "(" + COLUMN_ID + " integer primary key, " + STATUS + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
                 );
                 db.insert(DBEssentials.PHONELOCK, null, contentValues);
             }
@@ -132,7 +184,7 @@ public class databaseHandler extends SQLiteOpenHelper {
                 logg("APPMONITOR Create Table");
                 db.execSQL(
                         "create table " + DBEssentials.APPMONITOR + " " +
-                                "(" + COLUMN_ID + " integer primary key, " + PACKAGE_NAME + " text," + PACKAGE_STATUS + " text," + PACKAGE_MONITOR_LASTUSED + " text," + LOWBATTERY_DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
+                                "(" + COLUMN_ID + " integer primary key, " + PACKAGE_NAME + " text," + PACKAGE_STATUS + " text," + PACKAGE_MONITOR_LASTUSED + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
                 );
                 db.insert(DBEssentials.APPMONITOR, null, contentValues);
             }
@@ -206,7 +258,7 @@ public class databaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db;
         db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(LOWBATTERY_STATUS, status);
+        contentValues.put(STATUS, status);
         db.insert(DBEssentials.LOWBATTERY, null, contentValues);
         db.close();
         return true;
@@ -238,7 +290,7 @@ public class databaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db;
         db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(BLUETOOTH_STATUS, status);
+        contentValues.put(STATUS, status);
         db.insert(DBEssentials.BLUETOOTH_TABLE, null, contentValues);
         db.close();
         return true;
