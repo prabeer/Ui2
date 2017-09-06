@@ -4,12 +4,14 @@ package com.media.ui.Services;
 * Headset Plug receiver register
 * Home screen reciever register
  */
+
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 
+import com.media.ui.Database.databaseHandler;
 import com.media.ui.broadcastReceivers.HomeWatcher;
 import com.media.ui.broadcastReceivers.ScreenUnlockReceiver;
 
@@ -34,15 +36,22 @@ public class registerBroadcastLock extends Service {
         filter.addAction(Intent.ACTION_HEADSET_PLUG);
          mReceiver = new ScreenUnlockReceiver();
         registerReceiver(mReceiver, filter);
+     //   final databaseHandler d = new databaseHandler(this);
         HomeWatcher mHomeWatcher = new HomeWatcher(this);
         mHomeWatcher.setOnHomePressedListener(new OnHomePressedListener() {
             @Override
             public void onHomePressed() {
-               logg("Home Press");
+                logg("homekey");
+                databaseHandler d = new databaseHandler(getApplicationContext());
+               d.insertHOMEKEY("HOME");
+                d.close();
             }
             @Override
             public void onHomeLongPressed() {
-                logg("Home Long Press");
+                logg("recent");
+                databaseHandler d = new databaseHandler(getApplicationContext());
+                d.insertHOMEKEY("RECENT");
+                d.close();
             }
         });
         mHomeWatcher.startWatch();

@@ -54,6 +54,7 @@ public class uploadData {
                                logg("Del_Fail");
                            }else{
                                logg("Deleted");
+
                            }
                             //Toast.makeText(this, "File sent: " + fileName, Toast.LENGTH_LONG).show();
 
