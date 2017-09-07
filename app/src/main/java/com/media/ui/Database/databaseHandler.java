@@ -153,11 +153,11 @@ public class databaseHandler extends SQLiteOpenHelper {
         return homekeyDBList;
     }
 
-    public boolean deleteRecordsHOMEKEY(String date) {
+    public boolean deleteRecordsHOMEKEY(String hr) {
         SQLiteDatabase db;
         db = this.getWritableDatabase();
         try {
-            db.rawQuery("delete from " + DBEssentials.HOME_KEY + " where " + DATETIME + " < datetime(" + date + ")", null);
+            db.rawQuery("delete from " + DBEssentials.HOME_KEY + " where " + DATETIME + " < DATETIME('now', '-"+hr+" hours')", null);
         } catch (SQLiteException e) {
             e.printStackTrace();
         } finally {
@@ -240,11 +240,11 @@ public class databaseHandler extends SQLiteOpenHelper {
         return earjackDBList;
     }
 
-    public boolean deleteRecordsEARJACK(String date) {
+    public boolean deleteRecordsEARJACK(String hr) {
         SQLiteDatabase db;
         db = this.getWritableDatabase();
         try {
-            db.rawQuery("delete from " + DBEssentials.EAR_JACK + " where " + DATETIME + " < datetime(" + date + ")", null);
+            db.rawQuery("delete from " + DBEssentials.EAR_JACK + " where " + DATETIME + " < DATETIME('now', '-"+hr+" hours')", null);
         } catch (SQLiteException e) {
             e.printStackTrace();
         } finally {
@@ -323,11 +323,11 @@ public class databaseHandler extends SQLiteOpenHelper {
         return lockUnlockDBList;
     }
 
-    public boolean deleteRecordsLockMonitor(String date) {
+    public boolean deleteRecordsLockMonitor(String hr) {
         SQLiteDatabase db;
         db = this.getWritableDatabase();
         try {
-            db.rawQuery("delete from " + DBEssentials.PHONELOCK + " where " + DATETIME + " < datetime(" + date + ")", null);
+            db.rawQuery("delete from " + DBEssentials.PHONELOCK + " where " + DATETIME + " < DATETIME('now', '-"+hr+" hours')", null);
         } catch (SQLiteException e) {
             e.printStackTrace();
             return false;
@@ -428,7 +428,7 @@ public class databaseHandler extends SQLiteOpenHelper {
         db = this.getWritableDatabase();
         try {
             logg("delete from " + DBEssentials.APPMONITOR + " where " + DATETIME + "< DATETIME('now', '-"+hr+" hours')");
-            db.rawQuery("delete from " + DBEssentials.APPMONITOR + " where " + DATETIME + "< DATETIME('now', '-"+hr+" hours')", null);
+            db.rawQuery("delete from " + DBEssentials.APPMONITOR + " where " + DATETIME + " < DATETIME('now', '-"+hr+" hours')", null);
         } catch (SQLiteException e) {
             e.printStackTrace();
             return false;
@@ -507,7 +507,7 @@ public class databaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db;
         db = this.getWritableDatabase();
         try {
-            db.rawQuery("delete from " + DBEssentials.APPINSTALL + " where " + DATETIME + " < DATETIME('now', '-"+hr+" hour')", null);
+            db.rawQuery("delete from " + DBEssentials.APPINSTALL + " where " + DATETIME + " < DATETIME('now', '-"+hr+" hours')", null);
         } catch (SQLiteException e) {
             e.printStackTrace();
             return false;
@@ -583,11 +583,11 @@ public class databaseHandler extends SQLiteOpenHelper {
         return LowstatusList;
     }
 
-    public boolean deleteRecordLowBattery(String date) {
+    public boolean deleteRecordLowBattery(String hr) {
         SQLiteDatabase db;
         db = this.getWritableDatabase();
         try {
-            db.rawQuery("delete from " + DBEssentials.LOWBATTERY + " where " + DATETIME + " < datetime(" + date + ")", null);
+            db.rawQuery("delete from " + DBEssentials.LOWBATTERY + " where " + DATETIME + " < DATETIME('now', '-"+hr+" hours')", null);
         } catch (SQLiteException e) {
             e.printStackTrace();
             return false;
@@ -669,11 +669,11 @@ public class databaseHandler extends SQLiteOpenHelper {
     }
 
 
-    public boolean deleteRecordBTRecords(String date) {
+    public boolean deleteRecordBTRecords(String hr) {
         SQLiteDatabase db;
         db = this.getWritableDatabase();
         try {
-            db.rawQuery("delete from " + DBEssentials.BLUETOOTH_TABLE + " where " + DATETIME + " < datetime(" + date + ")", null);
+            db.rawQuery("delete from " + DBEssentials.BLUETOOTH_TABLE + " where " + DATETIME + " < DATETIME('now', '-"+hr+" hours')", null);
         } catch (SQLiteException e) {
             e.printStackTrace();
             return false;
