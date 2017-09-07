@@ -40,7 +40,7 @@ public class pingserver extends IntentService {
     private void cleanDB(Context context){
         logg("Start DB Cleaner");
         databaseHandler d = new databaseHandler(context);
-        String hr = "24";
+        String hr = constants.DEL_HRS;
         logg("h-:"+hr);
         try {
             logg("Deleting Records");

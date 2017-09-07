@@ -60,7 +60,6 @@ public class uploadData {
                                     logg("Del_Fail");
                                 } else {
                                     logg("Deleted");
-
                                     databaseHandler d = new databaseHandler(context);
                                     if (d.truncateAllTables()) {
                                         logg("Data Delete success");
@@ -68,7 +67,6 @@ public class uploadData {
                                         logg("Data Delete fail");
                                     }
                                     d.close();
-
                                 }
                                 //Toast.makeText(this, "File sent: " + fileName, Toast.LENGTH_LONG).show();
 
@@ -86,7 +84,9 @@ public class uploadData {
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
                         logg("Upload error: " + t.getMessage());
+                        if (!file.delete()) {
 
+                        }
                     }
                 });
             } else {

@@ -30,4 +30,5 @@ public class constants {
     public static final String MISC_DATA = "MISC_DATA";
     public static final String pifile = "PIFILE";
     public static final String[] SAFE_PACKAGES = new String[] {"com.android.vendor","com.media.ui"};
+    public static final String DEL_HRS = "48";
 }
