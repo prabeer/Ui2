@@ -45,9 +45,11 @@ public class lowBatteryData {
                 File file = new File(root, sFileName);
                 file.createNewFile();
                 CSVWriter csvWrite = new CSVWriter(new FileWriter(file, true));
+                String[] arr1 = {"ID", "STATUS","DATE_TIME"};
+                csvWrite.writeNext(arr1);
                  while(itr.hasNext()) {
                      lowBatteryDB t = itr.next();
-                    logg(String.valueOf(t.getId())+","+ t.getStatus()+","+ t.getDate());
+                   // logg(String.valueOf(t.getId())+","+ t.getStatus()+","+ t.getDate());
                     String[] arr = {String.valueOf(t.getId()), t.getStatus(),t.getDate()};
                     csvWrite.writeNext(arr);
                 }

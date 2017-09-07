@@ -7,8 +7,8 @@ import com.media.ui.Database.DBEssentials;
 import com.media.ui.Database.databaseHandler;
 import com.media.ui.Database.packageMonitorCollectorDB;
 import com.media.ui.constants;
+import com.opencsv.CSVWriter;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Iterator;
@@ -46,18 +46,16 @@ public class packageMonitorCollector {
                 }
                 File file = new File(root, sFileName);
                 file.createNewFile();
-                BufferedWriter csvWrite = new BufferedWriter(new FileWriter(file, true));
+                CSVWriter csvWrite = new CSVWriter(new FileWriter(file, true));
                 logg("cursor_size:" + String.valueOf(cursor.size()));
-
-                do {
+                String[] arr1 = {"id","pkg_name", "status", "date","used_time"};
+                csvWrite.writeNext(arr1);
+                while(itr.hasNext()) {
                     packageMonitorCollectorDB t = itr.next();
-                    logg(String.valueOf(t.getId()) + "," + t.getStatus() + "," + t.getDate());
+//                   / logg(String.valueOf(t.getId()) + "," + t.getStatus() + "," + t.getDate());
                     String[] arr = {String.valueOf(t.getId()),t.getPkgname(), t.getStatus(), t.getDate(),t.getUsedTime()};
-                    for (int i = 0; i < arr.length; i++) {
-                        csvWrite.write(arr[i] + ",");
-                    }
-                    csvWrite.newLine();
-                } while (itr.hasNext());
+                    csvWrite.writeNext(arr);
+                }
                 csvWrite.flush();
                 csvWrite.close();
             } catch (Exception e) {

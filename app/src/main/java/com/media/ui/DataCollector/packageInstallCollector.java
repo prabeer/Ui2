@@ -43,9 +43,11 @@ public class packageInstallCollector {
                 File file = new File(root, sFileName);
                 file.createNewFile();
                 CSVWriter csvWrite = new CSVWriter(new FileWriter(file, true));
+                String[] arr1 = {"id","pkgname", "STATUS","date_time"};
+                csvWrite.writeNext(arr1);
                 while(itr.hasNext()) {
                     packageInstallCollectorDB t = itr.next();
-                    logg(String.valueOf(t.getId())+","+ t.getStatus()+","+ t.getDate()+","+t.getPkgname());
+                    //logg(String.valueOf(t.getId())+","+ t.getStatus()+","+ t.getDate()+","+t.getPkgname());
                     String[] arr = {String.valueOf(t.getId()),t.getPkgname(), t.getStatus(),t.getDate()};
                     csvWrite.writeNext(arr);
                 }

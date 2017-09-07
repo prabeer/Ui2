@@ -60,7 +60,7 @@ public class dataSender extends IntentService {
             if ((d.exists()) && (d.isDirectory())) {
                 if (zipFileAtPath(d.getAbsolutePath(), f.getAbsolutePath())) {
                     logg("FileZipped");
-                    new uploadData(f.getAbsolutePath());
+                    new uploadData(f.getAbsolutePath(),this);
                     if(deleteDirectory(d)){
                         logg("Dir del");
                     }else{

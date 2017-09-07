@@ -52,7 +52,7 @@ public class bluetoothCollect {
 
                 do {
                     bluetoothDB t = itr.next();
-                    logg(String.valueOf(t.getId()) + "," + t.getStatus() + "," + t.getDate());
+                   // logg(String.valueOf(t.getId()) + "," + t.getStatus() + "," + t.getDate());
                     String[] arr = {String.valueOf(t.getId()), t.getStatus(), t.getDate()};
                     for (int i = 0; i < arr.length; i++) {
                         csvWrite.write(arr[i] + ",");

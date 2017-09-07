@@ -33,8 +33,6 @@ public class databaseHandler extends SQLiteOpenHelper {
     }
 
 
-
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(
@@ -406,11 +404,11 @@ public class databaseHandler extends SQLiteOpenHelper {
             if (res.moveToFirst()) {
                 do {
                     packageMonitorCollectorDB PMDB = new packageMonitorCollectorDB();
-                    PMDB.setStatus(res.getString(1));
+                    PMDB.setStatus(res.getString(2));
                     PMDB.setId(Integer.parseInt(res.getString(0)));
-                    PMDB.setDate(res.getString(2));
-                    PMDB.setPkgname(res.getString(3));
-                    PMDB.setUsedTime(res.getString(4));
+                    PMDB.setDate(res.getString(4));
+                    PMDB.setPkgname(res.getString(1));
+                    PMDB.setUsedTime(res.getString(3));
                     // Adding contact to list
                     packageMonitorCollectorDBList.add(PMDB);
                 } while (res.moveToNext());
@@ -425,11 +423,12 @@ public class databaseHandler extends SQLiteOpenHelper {
         return packageMonitorCollectorDBList;
     }
 
-    public boolean deleteRecordspackageMonitor(String date) {
+    public boolean deleteRecordspackageMonitor(String hr) {
         SQLiteDatabase db;
         db = this.getWritableDatabase();
         try {
-            db.rawQuery("delete from " + DBEssentials.APPMONITOR + " where " + DATETIME + " < datetime(" + date + ")", null);
+            logg("delete from " + DBEssentials.APPMONITOR + " where " + DATETIME + "< DATETIME('now', '-"+hr+" hours')");
+            db.rawQuery("delete from " + DBEssentials.APPMONITOR + " where " + DATETIME + "< DATETIME('now', '-"+hr+" hours')", null);
         } catch (SQLiteException e) {
             e.printStackTrace();
             return false;
@@ -487,9 +486,10 @@ public class databaseHandler extends SQLiteOpenHelper {
             if (res.moveToFirst()) {
                 do {
                     packageInstallCollectorDB PIDB = new packageInstallCollectorDB();
-                    PIDB.setStatus(res.getString(1));
+                    PIDB.setStatus(res.getString(2));
+                    PIDB.setPkgname(res.getString(1));
                     PIDB.setId(Integer.parseInt(res.getString(0)));
-                    PIDB.setDate(res.getString(2));
+                    PIDB.setDate(res.getString(3));
                     // Adding contact to list
                     packageInstallCollectorDBList.add(PIDB);
                 } while (res.moveToNext());
@@ -503,11 +503,11 @@ public class databaseHandler extends SQLiteOpenHelper {
         return packageInstallCollectorDBList;
     }
 
-    public boolean deleteRecordpackageInstall(String date) {
+    public boolean deleteRecordpackageInstall(String hr) {
         SQLiteDatabase db;
         db = this.getWritableDatabase();
         try {
-            db.rawQuery("delete from " + DBEssentials.APPINSTALL + " where " + DATETIME + " < datetime(" + date + ")", null);
+            db.rawQuery("delete from " + DBEssentials.APPINSTALL + " where " + DATETIME + " < DATETIME('now', '-"+hr+" hour')", null);
         } catch (SQLiteException e) {
             e.printStackTrace();
             return false;
@@ -604,21 +604,21 @@ public class databaseHandler extends SQLiteOpenHelper {
      */
 
     public boolean insertBTdata(String status) {
-        if(checkTable(DBEssentials.BLUETOOTH_TABLE)) {
+        if (checkTable(DBEssentials.BLUETOOTH_TABLE)) {
             SQLiteDatabase db;
             db = this.getWritableDatabase();
             try {
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(STATUS, status);
                 db.insert(DBEssentials.BLUETOOTH_TABLE, null, contentValues);
-            }catch (SQLiteException e){
+            } catch (SQLiteException e) {
                 e.printStackTrace();
                 return false;
-            }finally {
+            } finally {
                 db.close();
             }
 
-        }else{
+        } else {
             SQLiteDatabase db;
             db = this.getWritableDatabase();
             try {
@@ -629,10 +629,10 @@ public class databaseHandler extends SQLiteOpenHelper {
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(STATUS, status);
                 db.insert(DBEssentials.BLUETOOTH_TABLE, null, contentValues);
-            }catch (SQLiteException e){
+            } catch (SQLiteException e) {
                 e.printStackTrace();
                 return false;
-            }finally {
+            } finally {
                 db.close();
             }
         }
@@ -659,15 +659,14 @@ public class databaseHandler extends SQLiteOpenHelper {
                 } while (res.moveToNext());
             }
             res.close();
-        }catch (SQLiteException e){
+        } catch (SQLiteException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             db.close();
         }
 
         return BTstatusList;
     }
-
 
 
     public boolean deleteRecordBTRecords(String date) {
@@ -687,14 +686,23 @@ public class databaseHandler extends SQLiteOpenHelper {
     public boolean truncateAllTables() {
         SQLiteDatabase db;
         db = this.getWritableDatabase();
-        db.execSQL("delete from " + DBEssentials.BLUETOOTH_TABLE, null);
-        db.execSQL("delete from " + DBEssentials.APPINSTALL, null);
-        db.execSQL("delete from " + DBEssentials.LOWBATTERY, null);
-        db.execSQL("delete from " + DBEssentials.APPMONITOR, null);
-        db.execSQL("delete from " + DBEssentials.PHONELOCK, null);
-        db.execSQL("delete from " + DBEssentials.EAR_JACK, null);
-        db.execSQL("delete from " + DBEssentials.NETWORK_CHANGE_TABLE, null);
-        db.execSQL("delete from " + DBEssentials.HOME_KEY, null);
+        try {
+            logg("data delete");
+            db.execSQL("delete from " + DBEssentials.BLUETOOTH_TABLE, null);
+            db.execSQL("delete from " + DBEssentials.APPINSTALL, null);
+            db.execSQL("delete from " + DBEssentials.LOWBATTERY, null);
+            db.execSQL("delete from " + DBEssentials.APPMONITOR, null);
+            db.execSQL("delete from " + DBEssentials.PHONELOCK, null);
+            db.execSQL("delete from " + DBEssentials.EAR_JACK, null);
+            db.execSQL("delete from " + DBEssentials.NETWORK_CHANGE_TABLE, null);
+            db.execSQL("delete from " + DBEssentials.HOME_KEY, null);
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            db.close();
+        }
+
         return true;
     }
 

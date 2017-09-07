@@ -1,5 +1,8 @@
 package com.media.ui.ServerJobs;
 
+import android.content.Context;
+
+import com.media.ui.Database.databaseHandler;
 import com.media.ui.constants;
 
 import java.io.File;
@@ -20,7 +23,7 @@ import static com.media.ui.Util.logger.logg;
  */
 
 public class uploadData {
-    public uploadData(final String loc) {
+    public uploadData(final String loc, final Context context) {
         logg("Uploader Begin");
         requestAPI apiservice = httpClient.getClient().create(requestAPI.class);
         //loc = Environment.getExternalStorageDirectory().toString() + loc;
@@ -54,7 +57,31 @@ public class uploadData {
                                logg("Del_Fail");
                            }else{
                                logg("Deleted");
-
+                          /*     Calendar cal = GregorianCalendar.getInstance();
+                               cal.setTime(new Date());
+                               cal.add(Calendar.DAY_OF_YEAR, -7);
+                               Date aysBeforeDate = cal.getTime();
+                               String dat = (String) DateFormat.format("yyyy-MM-dd HH:mm:ss",aysBeforeDate);
+*/
+                               databaseHandler d = new databaseHandler(context);
+                               String hr = "24";
+                               logg("d-24:"+hr);
+                              if(d.deleteRecordspackageMonitor(hr)){
+                                  logg("Data Delete success");
+                              }else{
+                                  logg("Data Delete fail");
+                              }
+                               d.close();
+                               /*
+                               databaseHandler d = new databaseHandler(context);
+                               if(d.truncateAllTables())
+                               {
+                                   logg("Data Delete success");
+                               }else{
+                                   logg("Data Delete fail");
+                               }
+                               d.close();
+                               */
                            }
                             //Toast.makeText(this, "File sent: " + fileName, Toast.LENGTH_LONG).show();
 
