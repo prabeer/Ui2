@@ -63,7 +63,7 @@ public class appMonitorService extends IntentService {
 
                     for (String ls : comp_list) {
                         String[] l = ls.split(Pattern.quote("|"));
-                        logg(l[0] + "~" + l[1] + "~" + l[2]);
+                        //logg(l[0] + "~" + l[1] + "~" + l[2]);
                         databaseHandler m = new databaseHandler(this);
                         m.insertPackageMonitor(l[0], l[1], l[2]);
                         m.close();

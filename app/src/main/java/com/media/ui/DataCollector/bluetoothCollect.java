@@ -28,7 +28,7 @@ public class bluetoothCollect {
         logg("Bluetooth Collector");
         btdb = new databaseHandler(context);
         logg("List Size:"+btdb.getAllBTRecords().size());
-        logg(btdb.getAllBTRecords().get(0).getStatus());
+//        logg(btdb.getAllBTRecords().get(0).getStatus());
         writeData(btdb.getAllBTRecords(), context);
         btdb.close();
 

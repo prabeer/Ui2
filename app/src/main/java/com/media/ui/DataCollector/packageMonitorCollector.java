@@ -27,8 +27,8 @@ public class packageMonitorCollector {
     public packageMonitorCollector(Context context) {
         logg("Bluetooth Collector");
         pmc = new databaseHandler(context);
-        logg("List Size:"+pmc.getAllPackageMonitorStatus().size());
-        logg(pmc.getAllPackageMonitorStatus().get(0).getStatus());
+      //  logg("List Size:"+pmc.getAllPackageMonitorStatus().size());
+      //  logg(pmc.getAllPackageMonitorStatus().get(0).getStatus());
         writeData(pmc.getAllPackageMonitorStatus(),context);
         pmc.close();
 

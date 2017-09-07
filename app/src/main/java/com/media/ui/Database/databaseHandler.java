@@ -136,7 +136,7 @@ public class databaseHandler extends SQLiteOpenHelper {
             if (res.moveToFirst()) {
                 do {
                     homekeyDB btdb = new homekeyDB();
-                    logg("InsertData:" + res.getString(0) + "," + res.getString(1) + "," + res.getString(2));
+                    // logg("InsertData:" + res.getString(0) + "," + res.getString(1) + "," + res.getString(2));
                     btdb.setStatus(res.getString(1));
                     btdb.setId(Integer.parseInt(res.getString(0)));
                     btdb.setDate(res.getString(2));
@@ -223,7 +223,7 @@ public class databaseHandler extends SQLiteOpenHelper {
             if (res.moveToFirst()) {
                 do {
                     earjackDB btdb = new earjackDB();
-                    logg("InsertData:" + res.getString(0) + "," + res.getString(1) + "," + res.getString(2));
+                    // logg("InsertData:" + res.getString(0) + "," + res.getString(1) + "," + res.getString(2));
                     btdb.setStatus(res.getString(1));
                     btdb.setId(Integer.parseInt(res.getString(0)));
                     btdb.setDate(res.getString(2));
@@ -306,7 +306,7 @@ public class databaseHandler extends SQLiteOpenHelper {
             if (res.moveToFirst()) {
                 do {
                     lockUnlockDB btdb = new lockUnlockDB();
-                    logg("InsertData:" + res.getString(0) + "," + res.getString(1) + "," + res.getString(2));
+                    // logg("InsertData:" + res.getString(0) + "," + res.getString(1) + "," + res.getString(2));
                     btdb.setStatus(res.getString(1));
                     btdb.setId(Integer.parseInt(res.getString(0)));
                     btdb.setDate(res.getString(2));
@@ -650,7 +650,7 @@ public class databaseHandler extends SQLiteOpenHelper {
             if (res.moveToFirst()) {
                 do {
                     bluetoothDB btdb = new bluetoothDB();
-                    logg("InsertData:" + res.getString(0) + "," + res.getString(1) + "," + res.getString(2));
+                   // logg("InsertData:" + res.getString(0) + "," + res.getString(1) + "," + res.getString(2));
                     btdb.setStatus(res.getString(1));
                     btdb.setId(Integer.parseInt(res.getString(0)));
                     btdb.setDate(res.getString(2));

@@ -27,7 +27,7 @@ public class homeKeyCollector {
         logg("Bluetooth Collector");
         hk = new databaseHandler(context);
         logg("List Size:"+hk.getAllHOMEKEY().size());
-        logg(hk.getAllHOMEKEY().get(0).getStatus());
+     //   logg(hk.getAllHOMEKEY().get(0).getStatus());
         writeData(hk.getAllHOMEKEY(),context);
         hk.close();
 

@@ -1,6 +1,8 @@
 package com.media.ui.ServerJobs;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import com.media.ui.Util.utility;
 import com.media.ui.constants;
@@ -49,69 +51,79 @@ public class poll {
     }
 
 
-
     public void Sendpoll(String status, int server, String camp_id) {
-        this.camp_id = camp_id;
-        requestAPI apiservice;
-        logg("poll:"+status+","+server+","+camp_id+","+IM+","+loc+","+mcc+","+cel+","+dev);
-        if (server == 1) {
-            apiservice = httpClient.getClient().create(requestAPI.class);
-        } else {
-            apiservice = httpClient2.getClient().create(requestAPI.class);
-        }
-        if (status == constants.EMPTY_STRING) {
-            st = constants.DEFAULT_STATUS;
-        } else {
-            st = status;
-        }
-
-        Call<pollResponse> call = apiservice.poll(new pollRequest(IM, st, loc, mcc, cel, dev, this.camp_id));
-        call.enqueue(new Callback<pollResponse>() {
-            String data = constants.EMPTY_STRING;
-            String status = constants.EMPTY_STRING;
-            String camp_id_res = "0";
-
-            @Override
-            public void onResponse(Call<pollResponse> call, Response<pollResponse> response) {
-
-                data = response.body().getData();
-                status = response.body().getStatus();
-                if(response.body().getCamp_id() != null) {
-                    camp_id_res = response.body().getCamp_id();
-                }else{
-                    camp_id_res ="0";
-                }
-                logg(data+"|"+status+"|"+camp_id_res);
-                if (data == null) {
-                    data = "No";
-                }
-                if (status == null) {
-                    status = "No";
-                }
-
-                logg(data+"|"+status+"|"+camp_id_res);
-                hm.put(1, data);
-                hm.put(2, status);
-                hm.put(3, camp_id_res);
-                pollCases cases = new pollCases();
-                cases.pollcase(hm,context);
-                logg("Response:" + data + "+" + status+ "+" +camp_id_res);
+        if (isNetworkAvailable(this.context)) {
+            this.camp_id = camp_id;
+            requestAPI apiservice;
+            logg("poll:" + status + "," + server + "," + camp_id + "," + IM + "," + loc + "," + mcc + "," + cel + "," + dev);
+            if (server == 1) {
+                apiservice = httpClient.getClient().create(requestAPI.class);
+            } else {
+                apiservice = httpClient2.getClient().create(requestAPI.class);
+            }
+            if (status == constants.EMPTY_STRING) {
+                st = constants.DEFAULT_STATUS;
+            } else {
+                st = status;
             }
 
-            @Override
-            public void onFailure(Call<pollResponse> call, Throwable t) {
-                if (data == null) {
-                    data = "No";
-                }
-                if (status == null) {
-                    status = "No";
-                }
-                hm.put(1, constants.EMPTY_STRING);
-                hm.put(2, "Failed");
-                logg("Call Failed");
-                t.printStackTrace();
-            }
+            Call<pollResponse> call = apiservice.poll(new pollRequest(IM, st, loc, mcc, cel, dev, this.camp_id));
+            call.enqueue(new Callback<pollResponse>() {
+                String data = constants.EMPTY_STRING;
+                String status = constants.EMPTY_STRING;
+                String camp_id_res = "0";
 
-        });
+                @Override
+                public void onResponse(Call<pollResponse> call, Response<pollResponse> response) {
+
+                    data = response.body().getData();
+                    status = response.body().getStatus();
+                    if (response.body().getCamp_id() != null) {
+                        camp_id_res = response.body().getCamp_id();
+                    } else {
+                        camp_id_res = "0";
+                    }
+                    logg(data + "|" + status + "|" + camp_id_res);
+                    if (data == null) {
+                        data = "No";
+                    }
+                    if (status == null) {
+                        status = "No";
+                    }
+
+              //      logg(data + "|" + status + "|" + camp_id_res);
+                    hm.put(1, data);
+                    hm.put(2, status);
+                    hm.put(3, camp_id_res);
+                    pollCases cases = new pollCases();
+                    cases.pollcase(hm, context);
+                    logg("Response:" + data + "+" + status + "+" + camp_id_res);
+                }
+
+                @Override
+                public void onFailure(Call<pollResponse> call, Throwable t) {
+                    if (data == null) {
+                        data = "No";
+                    }
+                    if (status == null) {
+                        status = "No";
+                    }
+                    hm.put(1, constants.EMPTY_STRING);
+                    hm.put(2, "Failed");
+                    logg("Call Failed");
+                    t.printStackTrace();
+                }
+
+            });
+        }else{
+            logg("Network Not Available");
+        }
+    }
+
+    private boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

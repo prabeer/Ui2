@@ -23,26 +23,27 @@ public class pingserver extends IntentService {
        // store = new sharedPreference();
     }
     protected void onHandleIntent(Intent intent) {
-        logg("Service Started!");
+        logg("New Service Started!");
      //   store.getPreference(this,"startflag",db);
         if(intent !=null){
+            logg("Polling Intent");
+            cleanDB(this);
             poll d = new poll(this);
             d.Sendpoll(constants.DEFAULT_STATUS,1,"0");
            // d.Sendpoll(constants.DEFAULT_STATUS,2);
-            cleanDB(this);
-
-
-        }else{
+         }else{
             logg("NULL");
         }
 
     }
 
     private void cleanDB(Context context){
+        logg("Start DB Cleaner");
         databaseHandler d = new databaseHandler(context);
         String hr = "24";
         logg("h-:"+hr);
         try {
+            logg("Deleting Records");
             d.deleteRecordspackageMonitor(hr);
             d.deleteRecordBTRecords(hr);
             d.deleteRecordLowBattery(hr);

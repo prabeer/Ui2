@@ -28,7 +28,7 @@ public class earjackCollector {
         logg("Bluetooth Collector");
         ej = new databaseHandler(context);
         logg("List Size:"+ej.getAllEARJACK().size());
-        logg(ej.getAllEARJACK().get(0).getStatus());
+       // logg(ej.getAllEARJACK().get(0).getStatus());
         writeData(ej.getAllEARJACK(),context);
         ej.close();
 

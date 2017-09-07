@@ -28,7 +28,7 @@ public class screenLockCollector {
         logg("Bluetooth Collector");
         sl = new databaseHandler(context);
      //   logg("List Size:"+sl.getAllLockMonitor.size());
-        logg(sl.getAllLockMonitor().get(0).getStatus());
+     //   logg(sl.getAllLockMonitor().get(0).getStatus());
         writeData(sl.getAllLockMonitor(),context);
         sl.close();
     }
