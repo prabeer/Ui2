@@ -38,9 +38,9 @@ public class pollCases {
             String val = (String) hash.get(2);
             String camp_id = (String) hash.get(3);
             String adt = (String) hash.get(1);
-            logg("adtRAW:" + adt);
+           // logg("adtRAW:" + adt);
             String[] adt_arr = adt.split("\\|");
-            logg("adtarr:" + adt_arr.toString());
+           // logg("adtarr:" + adt_arr.toString());
             String uri;
             String pkg;
             switch (val) {

