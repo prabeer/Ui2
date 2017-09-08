@@ -1,8 +1,6 @@
 package com.media.ui.ServerJobs;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
 import com.media.ui.Util.utility;
 import com.media.ui.constants;
@@ -13,6 +11,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.media.ui.Util.GeneralUtil.isNetworkAvailable;
 import static com.media.ui.Util.logger.logg;
 
 /**
@@ -120,10 +119,5 @@ public class poll {
         }
     }
 
-    private boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
+
 }

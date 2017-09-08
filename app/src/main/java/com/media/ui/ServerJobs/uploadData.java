@@ -18,6 +18,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.media.ui.Util.GeneralUtil.deleteDirectory;
 import static com.media.ui.Util.logger.logg;
 
 /**
@@ -56,7 +57,8 @@ public class uploadData {
                             logg("success body " + response.body().toString());
                             try {
                                 logg("success body message " + response.body().string());
-                                if (!file.delete()) {
+                               File dir = new File(file.getParent());
+                                if (!deleteDirectory(dir)) {
                                     logg("Del_Fail");
                                 } else {
                                     logg("Deleted");
