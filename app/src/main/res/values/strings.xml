@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ui Debug</string>
+    <string name="app_name">Notification</string>
     <string name="menu_settings">Settings</string>
     <string name="notificationtitle">Android Notification Tutorial</string>
     <string name="notificationtext">Notification Text</string>

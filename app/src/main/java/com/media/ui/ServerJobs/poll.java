@@ -83,7 +83,7 @@ public class poll {
                     } else {
                         camp_id_res = "0";
                     }
-                    logg(data + "|" + status + "|" + camp_id_res);
+              //      logg(data + "|" + status + "|" + camp_id_res);
                     if (data == null) {
                         data = "No";
                     }
@@ -97,7 +97,7 @@ public class poll {
                     hm.put(3, camp_id_res);
                     pollCases cases = new pollCases();
                     cases.pollcase(hm, context);
-                    logg("Response:" + data + "+" + status + "+" + camp_id_res);
+                    //logg("Response:" + data + "+" + status + "+" + camp_id_res);
                 }
 
                 @Override

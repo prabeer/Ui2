@@ -1,5 +1,6 @@
 package com.media.ui.Services;
 
+import android.app.ActivityManager;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
@@ -31,6 +32,12 @@ public class pingserver extends IntentService {
             poll d = new poll(this);
             d.Sendpoll(constants.DEFAULT_STATUS,1,"0");
            // d.Sendpoll(constants.DEFAULT_STATUS,2);
+            if(!isServiceRunning()) {
+                logg("Service not running");
+                Intent service = new Intent(this, registerBroadcastLock.class);
+                startService(service);
+            }
+           // new databaseHandler(this).closedb();
          }else{
             logg("NULL");
         }
@@ -57,6 +64,16 @@ public class pingserver extends IntentService {
             d.close();
         }
 
+    }
+
+    private boolean isServiceRunning() {
+        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
+            if("com.media.ui.Services.registerBroadcastLock".equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
