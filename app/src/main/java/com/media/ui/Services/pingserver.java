@@ -11,6 +11,7 @@ import com.media.ui.Util.sharedPreference;
 import com.media.ui.constants;
 
 import static com.media.ui.Util.logger.logg;
+import static com.media.ui.constants.SERVICE_NAME;
 
 public class pingserver extends IntentService {
 
@@ -69,7 +70,7 @@ public class pingserver extends IntentService {
     private boolean isServiceRunning() {
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
-            if("com.media.ui.Services.registerBroadcastLock".equals(service.service.getClassName())) {
+            if(SERVICE_NAME.equals(service.service.getClassName())) {
                 return true;
             }
         }
