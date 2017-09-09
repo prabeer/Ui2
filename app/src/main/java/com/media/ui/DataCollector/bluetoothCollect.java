@@ -7,8 +7,8 @@ import com.media.ui.Database.DBEssentials;
 import com.media.ui.Database.bluetoothDB;
 import com.media.ui.Database.databaseHandler;
 import com.media.ui.constants;
+import com.opencsv.CSVWriter;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Iterator;
@@ -47,18 +47,15 @@ public class bluetoothCollect {
                 }
                 File file = new File(root, sFileName);
                 file.createNewFile();
-                BufferedWriter csvWrite = new BufferedWriter(new FileWriter(file, true));
-                logg("cursor_size:" + String.valueOf(cursor.size()));
-
-                do {
+                CSVWriter csvWrite = new CSVWriter(new FileWriter(file, true));
+                String[] arr1 = {"ID", "STATUS","DATE_TIME"};
+                csvWrite.writeNext(arr1);
+                while(itr.hasNext()) {
                     bluetoothDB t = itr.next();
-                   // logg(String.valueOf(t.getId()) + "," + t.getStatus() + "," + t.getDate());
-                    String[] arr = {String.valueOf(t.getId()), t.getStatus(), t.getDate()};
-                    for (int i = 0; i < arr.length; i++) {
-                        csvWrite.write(arr[i] + ",");
-                    }
-                    csvWrite.newLine();
-                } while (itr.hasNext());
+                    // logg(String.valueOf(t.getId())+","+ t.getStatus()+","+ t.getDate());
+                    String[] arr = {String.valueOf(t.getId()), t.getStatus(),t.getDate()};
+                    csvWrite.writeNext(arr);
+                }
                 csvWrite.flush();
                 csvWrite.close();
             } catch (Exception e) {

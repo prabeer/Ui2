@@ -1,6 +1,5 @@
 package com.media.ui.Services;
 
-import android.app.ActivityManager;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +9,8 @@ import com.media.ui.ServerJobs.poll;
 import com.media.ui.Util.sharedPreference;
 import com.media.ui.constants;
 
+import static com.media.ui.Util.GeneralUtil.isServiceRunning;
 import static com.media.ui.Util.logger.logg;
-import static com.media.ui.constants.SERVICE_NAME;
 
 public class pingserver extends IntentService {
 
@@ -33,7 +32,7 @@ public class pingserver extends IntentService {
             poll d = new poll(this);
             d.Sendpoll(constants.DEFAULT_STATUS,1,"0");
            // d.Sendpoll(constants.DEFAULT_STATUS,2);
-            if(!isServiceRunning()) {
+            if(!isServiceRunning(this)) {
                 logg("Service not running");
                 Intent service = new Intent(this, registerBroadcastLock.class);
                 startService(service);
@@ -67,14 +66,6 @@ public class pingserver extends IntentService {
 
     }
 
-    private boolean isServiceRunning() {
-        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
-            if(SERVICE_NAME.equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
+
 }
 
