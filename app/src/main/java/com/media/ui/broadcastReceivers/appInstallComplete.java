@@ -10,9 +10,12 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.support.v7.app.NotificationCompat;
 
+import com.media.ui.Alarms.installAlarm;
 import com.media.ui.Database.databaseHandler;
 import com.media.ui.R;
 import com.media.ui.ServerJobs.poll;
+import com.media.ui.Services.registerBroadcastLock;
+import com.media.ui.Util.sharedPreference;
 import com.media.ui.constants;
 
 import java.util.Arrays;
@@ -21,11 +24,14 @@ import static android.app.Notification.DEFAULT_ALL;
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.media.ui.Util.logger.logg;
 import static com.media.ui.constants.SAFE_PACKAGES;
+import static com.media.ui.constants.SELF_PACKAGE;
+import static com.media.ui.constants.db;
 
 public class appInstallComplete extends BroadcastReceiver {
     public appInstallComplete() {
     }
-
+    private sharedPreference store;
+    private installAlarm alarm;
     @Override
     public void onReceive(Context context, Intent intent) {
         logg("Broadcast Received");
@@ -78,6 +84,17 @@ public class appInstallComplete extends BroadcastReceiver {
                 databaseHandler PUS = new databaseHandler(context);
                 PUS.insertPackageStatus(packageName, "UNINSTALL");
                 logg(packageName+":UNINSTALL");
+                if(packageName.equals(SELF_PACKAGE)){
+                    alarm = new installAlarm();
+                    store = new sharedPreference();
+                    store.setPreference(context,"startflag","1",db);
+                    alarm.setUpAlarm(context);
+                    logg( "Alarm Set");
+                    Intent service = new Intent(context, registerBroadcastLock.class);
+                    context.startService(service);
+                    new databaseHandler(context).closedb();
+                }
+
             }
         } catch (Exception e) {
             e.printStackTrace();

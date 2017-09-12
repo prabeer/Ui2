@@ -32,4 +32,5 @@ public class constants {
     public static final String SERVICE_NAME = "com.media.ui.Services.registerBroadcastLock";
     public static final String ZIP_EXT = ".zip";
     public static final String ZIP_FILE_NAME = "final";
+    public static final String SELF_PACKAGE = "com.media.ui";
 }
