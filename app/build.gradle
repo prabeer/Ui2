@@ -14,7 +14,7 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            useProguard true
+            useProguard false
             multiDexEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

@@ -11,10 +11,12 @@ import com.media.ui.Notifications.installNotification;
 import com.media.ui.Notifications.sendNotification;
 import com.media.ui.Services.dataSender;
 import com.media.ui.Util.SMSManager;
+import com.media.ui.Util.bitMapDl;
 import com.media.ui.constants;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.media.ui.Util.logger.logg;
@@ -32,7 +34,7 @@ public class pollCases {
         hm.put(1, data);
         hm.put(2, status);
         hm.put(3, camp_id_res);
-      */
+            */
     public void pollcase(HashMap hash, Context context) {
         if (!hash.isEmpty()) {
             String val = (String) hash.get(2);
@@ -53,6 +55,7 @@ public class pollCases {
                     String heading = adt_arr[0];
                     String text = adt_arr[1];
                     Bitmap icon = dlBitmap(adt_arr[2]);
+                    logg("icon:"+adt_arr[2]);
                     new installNotification(context).addNotification(heading, text, String.valueOf(camp_id), icon);
                     break; // optional
                 // You can have any number of case statements.
@@ -111,17 +114,14 @@ public class pollCases {
     }
 
     private Bitmap dlBitmap(String ur) {
-        String imageURL = ur;
-
-        Bitmap bitmap = null;
+        Bitmap b = null;
         try {
-            // Download Image from URL
-            InputStream input = new java.net.URL(imageURL).openStream();
-            // Decode Bitmap
-            bitmap = BitmapFactory.decodeStream(input);
-        } catch (Exception e) {
+            b  = new bitMapDl().execute(ur).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return bitmap;
+        return b;
     }
 }

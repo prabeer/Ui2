@@ -82,7 +82,7 @@ public class sendNotification {
     }
     private Bitmap dlBitmap(String ur) {
         Bitmap b = null;
-        try {
+               try {
            b  = new bitMapDl().execute(ur).get();
         } catch (InterruptedException e) {
             e.printStackTrace();

@@ -32,13 +32,17 @@ public class setAlarm extends IntentService{
     protected void onHandleIntent(Intent intent) {
         // store.setPreference(this,"startflag","1",db);
         logg("Service Reset!");
+try {
+    Intent dialogIntent = new Intent(getBaseContext(), pingserver.class);
+    dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    getApplication().startService(dialogIntent);
 
-        Intent dialogIntent = new Intent(getBaseContext(), pingserver.class);
-        dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        getApplication().startService(dialogIntent);
-
-        logg("Start New Service!");
-        stopSelf();
+    logg("Start New Service!");
+    stopSelf();
+}catch (Exception e){
+    stopSelf();
+    e.printStackTrace();
+}
     }
 
 }
