@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import com.crashlytics.android.Crashlytics;
 import com.media.ui.Database.databaseHandler;
 
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
+
+import io.fabric.sdk.android.Fabric;
 
 import static android.app.AppOpsManager.MODE_ALLOWED;
 import static android.app.AppOpsManager.OPSTR_GET_USAGE_STATS;
@@ -43,6 +46,7 @@ public class appMonitorService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        Fabric.with(this, new Crashlytics());
         if (intent != null) {
             int x = 1;
             int y = 0;

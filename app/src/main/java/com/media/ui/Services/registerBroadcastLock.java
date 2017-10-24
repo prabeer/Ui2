@@ -11,9 +11,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 
+import com.crashlytics.android.Crashlytics;
 import com.media.ui.Database.databaseHandler;
 import com.media.ui.broadcastReceivers.HomeWatcher;
 import com.media.ui.broadcastReceivers.ScreenUnlockReceiver;
+
+import io.fabric.sdk.android.Fabric;
 
 import static com.media.ui.Util.logger.logg;
 
@@ -31,6 +34,7 @@ public class registerBroadcastLock extends Service {
     public void onCreate() {
         logg("Create Monitor Service");
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_HEADSET_PLUG);

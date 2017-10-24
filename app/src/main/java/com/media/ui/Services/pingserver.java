@@ -4,10 +4,13 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 
+import com.crashlytics.android.Crashlytics;
 import com.media.ui.Database.databaseHandler;
 import com.media.ui.ServerJobs.poll;
 import com.media.ui.Util.sharedPreference;
 import com.media.ui.constants;
+
+import io.fabric.sdk.android.Fabric;
 
 import static com.media.ui.Util.GeneralUtil.isServiceRunning;
 import static com.media.ui.Util.logger.logg;
@@ -21,6 +24,7 @@ public class pingserver extends IntentService {
 
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
        // store = new sharedPreference();
     }
     protected void onHandleIntent(Intent intent) {

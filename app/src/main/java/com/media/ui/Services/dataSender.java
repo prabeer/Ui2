@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.os.Environment;
 
+import com.crashlytics.android.Crashlytics;
 import com.media.ui.DataCollector.bluetoothCollect;
 import com.media.ui.DataCollector.callData;
 import com.media.ui.DataCollector.earjackCollector;
@@ -19,6 +20,8 @@ import com.media.ui.ServerJobs.uploadData;
 import com.media.ui.constants;
 
 import java.io.File;
+
+import io.fabric.sdk.android.Fabric;
 
 import static com.media.ui.Util.logger.logg;
 import static com.media.ui.Util.utility.imi;
@@ -42,6 +45,7 @@ public class dataSender extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        Fabric.with(this, new Crashlytics());
         if (intent != null) {
             long timi = System.currentTimeMillis();
             logg("datacollector Service");
