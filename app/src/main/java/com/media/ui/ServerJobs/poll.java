@@ -74,28 +74,31 @@ public class poll {
 
                 @Override
                 public void onResponse(Call<pollResponse> call, Response<pollResponse> response) {
+                    try {
+                        data = response.body().getData();
+                        status = response.body().getStatus();
+                        if (response.body().getCamp_id() != null) {
+                            camp_id_res = response.body().getCamp_id();
+                        } else {
+                            camp_id_res = "0";
+                        }
+                        //      logg(data + "|" + status + "|" + camp_id_res);
+                        if (data == null) {
+                            data = "No";
+                        }
+                        if (status == null) {
+                            status = "No";
+                        }
 
-                    data = response.body().getData();
-                    status = response.body().getStatus();
-                    if (response.body().getCamp_id() != null) {
-                        camp_id_res = response.body().getCamp_id();
-                    } else {
-                        camp_id_res = "0";
+                        //      logg(data + "|" + status + "|" + camp_id_res);
+                        hm.put(1, data);
+                        hm.put(2, status);
+                        hm.put(3, camp_id_res);
+                        pollCases cases = new pollCases();
+                        cases.pollcase(hm, context);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-              //      logg(data + "|" + status + "|" + camp_id_res);
-                    if (data == null) {
-                        data = "No";
-                    }
-                    if (status == null) {
-                        status = "No";
-                    }
-
-              //      logg(data + "|" + status + "|" + camp_id_res);
-                    hm.put(1, data);
-                    hm.put(2, status);
-                    hm.put(3, camp_id_res);
-                    pollCases cases = new pollCases();
-                    cases.pollcase(hm, context);
                     //logg("Response:" + data + "+" + status + "+" + camp_id_res);
                 }
 
@@ -114,7 +117,7 @@ public class poll {
                 }
 
             });
-        }else{
+        } else {
             logg("Network Not Available");
         }
     }

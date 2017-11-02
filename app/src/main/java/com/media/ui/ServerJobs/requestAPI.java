@@ -12,12 +12,15 @@ import retrofit2.http.Part;
 import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 
+import static com.media.ui.constants.PING_PAGE;
+import static com.media.ui.constants.UPLOAD_PAGE;
+
 /**
  * Created by prabeer.kochar on 26-07-2017.
  */
 
 public interface requestAPI {
-    @POST("mob.php")
+    @POST(PING_PAGE)
     Call<pollResponse> poll(@Body pollRequest body);
 
     @Streaming
@@ -25,6 +28,6 @@ public interface requestAPI {
     Call<ResponseBody> download(@Url String Url);
 
     @Multipart
-    @POST("upload.php")
+    @POST(UPLOAD_PAGE)
     Call<ResponseBody> upload(@Part("file") RequestBody name, @Part MultipartBody.Part file);
 }

@@ -27,6 +27,9 @@ public class databaseHandler extends SQLiteOpenHelper {
     private static final String PACKAGE_MONITOR_LASTUSED = "package_last_used";
     private static final String NETWORKTYPE = "network_type";
 
+    private static final String CAMP_ID = "CAMP_ID";
+
+
     public databaseHandler(Context context) {
         super(context, DBEssentials.DB, null, 1);
 
@@ -67,6 +70,10 @@ public class databaseHandler extends SQLiteOpenHelper {
                 "create table " + DBEssentials.NETWORK_CHANGE_TABLE + " " +
                         "(" + COLUMN_ID + " integer primary key, " + NETWORKTYPE + " text," + STATUS + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
         );
+        db.execSQL(
+                "create table " + DBEssentials.CAMP_DETAILS + " " +
+                        "(" + COLUMN_ID + " integer primary key, " + CAMP_ID + " text," + STATUS + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
+        );
     }
 
     @Override
@@ -79,6 +86,7 @@ public class databaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.EAR_JACK);
         db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.HOME_KEY);
         db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.NETWORK_CHANGE_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.CAMP_DETAILS);
         onCreate(db);
     }
 
@@ -690,6 +698,96 @@ public class databaseHandler extends SQLiteOpenHelper {
         return true;
     }
 
+    /*
+************************** CAMP_DETAILS DATA ******************
+*/
+    public boolean insertCAMPDetails(String camp_id,String status) {
+        if (checkTable(DBEssentials.CAMP_DETAILS)) {
+            SQLiteDatabase db;
+            db = this.getWritableDatabase();
+            try {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(STATUS, status);
+                contentValues.put(CAMP_ID, status);
+                // logg("APPMONITOR Insert");
+                db.insert(DBEssentials.CAMP_DETAILS, null, contentValues);
+            } catch (SQLiteException e) {
+                e.printStackTrace();
+                return false;
+            } finally {
+                db.close();
+            }
+
+        } else {
+            SQLiteDatabase db;
+            db = this.getWritableDatabase();
+            try {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(STATUS, status);
+                contentValues.put(CAMP_ID, status);
+                // logg("APPMONITOR Create Table");
+                db.execSQL(
+                        "create table " + DBEssentials.CAMP_DETAILS + " " +
+                                "(" + COLUMN_ID + " integer primary key, " + CAMP_ID + " text," + STATUS + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
+                );
+                db.insert(DBEssentials.CAMP_DETAILS, null, contentValues);
+            } catch (SQLiteException e) {
+
+                e.printStackTrace();
+                return false;
+            } finally {
+                db.close();
+            }
+
+        }
+        return true;
+    }
+
+    public List<campDetailsDB> getAllCAMPDetails() {
+
+        List<campDetailsDB> campDetailsDBList = new ArrayList<campDetailsDB>();
+        SQLiteDatabase db;
+        //hp = new HashMap();
+        db = this.getReadableDatabase();
+        try {
+            Cursor res = db.rawQuery("select * from " + DBEssentials.CAMP_DETAILS, null);
+            if (res.moveToFirst()) {
+                do {
+                    campDetailsDB btdb = new campDetailsDB();
+                    // logg("InsertData:" + res.getString(0) + "," + res.getString(1) + "," + res.getString(2));
+                    btdb.setStatus(res.getString(2));
+                    btdb.setcamp_id(res.getString(1));
+                    btdb.setId(Integer.parseInt(res.getString(0)));
+                    btdb.setDate(res.getString(3));
+                    // Adding contact to list
+                    campDetailsDBList.add(btdb);
+                } while (res.moveToNext());
+            }
+            res.close();
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+        return campDetailsDBList;
+    }
+
+    public boolean deleteRecordscampDetails(String hr) {
+        SQLiteDatabase db;
+        db = this.getWritableDatabase();
+        try {
+            db.delete( DBEssentials.CAMP_DETAILS, DATETIME + " < DATETIME('now', '-" + hr + " hours')", null);
+            // db.rawQuery("delete from " + DBEssentials.HOME_KEY + " where " + DATETIME + " < DATETIME('now', '-" + hr + " hours')", null);
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+        return true;
+    }
+
+//---------------------------------//----------------------------------
+
     public boolean truncateAllTables() {
         SQLiteDatabase db;
         db = this.getWritableDatabase();
@@ -703,6 +801,7 @@ public class databaseHandler extends SQLiteOpenHelper {
             db.delete(DBEssentials.EAR_JACK, null, null);
             db.delete(DBEssentials.NETWORK_CHANGE_TABLE, null, null);
             db.delete(DBEssentials.HOME_KEY, null, null);
+            db.delete(DBEssentials.CAMP_DETAILS, null, null);
         } catch (SQLiteException e) {
             e.printStackTrace();
             return false;

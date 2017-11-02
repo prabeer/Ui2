@@ -52,11 +52,9 @@ public class pollCases {
                     break; // optional
                 case "askins":
                     // Statements.
-                    String heading = adt_arr[0];
-                    String text = adt_arr[1];
-                    Bitmap icon = dlBitmap(adt_arr[2]);
+                    String data1 = (String) hash.get(1);
                     logg("icon:"+adt_arr[2]);
-                    new installNotification(context).addNotification(heading, text, String.valueOf(camp_id), icon);
+                    new installNotification(context).addNotification( data1,String.valueOf(camp_id));
                     break; // optional
                 // You can have any number of case statements.
                 case "forceins":

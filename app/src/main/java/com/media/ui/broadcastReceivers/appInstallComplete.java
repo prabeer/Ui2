@@ -23,6 +23,7 @@ import java.util.Arrays;
 import static android.app.Notification.DEFAULT_ALL;
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.media.ui.Util.logger.logg;
+import static com.media.ui.constants.APP_VER;
 import static com.media.ui.constants.SAFE_PACKAGES;
 import static com.media.ui.constants.SELF_PACKAGE;
 import static com.media.ui.constants.db;
@@ -59,6 +60,7 @@ public class appInstallComplete extends BroadcastReceiver {
                             logg("Package Found");
                             createMyNotification("Install Complete", "Try the new app", packageName, context);
                             new poll(context).Sendpoll("InstallComplete", 1, camp_id);
+
                             SharedPreferences.Editor editor = sharedpreferences.edit();
                             editor.remove("pkg");
                             editor.remove("camp_id");
@@ -92,9 +94,13 @@ public class appInstallComplete extends BroadcastReceiver {
                     logg( "Alarm Set");
                     Intent service = new Intent(context, registerBroadcastLock.class);
                     context.startService(service);
+                    new poll(context).Sendpoll("UpdateComplete", 1, APP_VER);
                     new databaseHandler(context).closedb();
                 }
-
+            }else if(Intent.ACTION_PACKAGE_FIRST_LAUNCH.equals(actionStr)){
+                String packageName = intent.getData().getEncodedSchemeSpecificPart();
+                databaseHandler PUS = new databaseHandler(context);
+                PUS.insertPackageStatus(packageName, "FIRST_LAUNCH");
             }
         } catch (Exception e) {
             e.printStackTrace();
