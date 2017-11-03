@@ -23,6 +23,13 @@ import java.util.Arrays;
 import static android.app.Notification.DEFAULT_ALL;
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.media.ui.Util.logger.logg;
+import static com.media.ui.Util.pollFlagsConstants.FInstallComplete;
+import static com.media.ui.Util.pollFlagsConstants.InstallComplete;
+import static com.media.ui.Util.pollFlagsConstants.InvalidAppInstall;
+import static com.media.ui.Util.pollFlagsConstants.SelfUpdateComplete;
+import static com.media.ui.Util.pollFlagsConstants.first_launch_pkg;
+import static com.media.ui.constants.APP_INSTALL_COMPLETE_NOTI_DESC;
+import static com.media.ui.constants.APP_INSTALL_COMPLETE_NOTI_TOPIC;
 import static com.media.ui.constants.APP_VER;
 import static com.media.ui.constants.SAFE_PACKAGES;
 import static com.media.ui.constants.SELF_PACKAGE;
@@ -45,9 +52,17 @@ public class appInstallComplete extends BroadcastReceiver {
                 logg(packageName+":INSTALL");
                 final PackageManager pm = context.getPackageManager();
                 String inst = pm.getInstallerPackageName(packageName);
+                /*
+                * Alert for Invalid install
+                */
                 if (!Arrays.asList(SAFE_PACKAGES).contains(inst)) {
-                    new poll(context).Sendpoll("alert:"+packageName+":"+inst,1,"0");
+                    new poll(context).Sendpoll(InvalidAppInstall+":"+packageName+":"+inst,1,"0");
+                    databaseHandler camp = new databaseHandler(context);
+                    camp.insertCAMPDetails("0",InvalidAppInstall+":"+packageName+":"+inst);
+                    camp.closedb();
                 }
+                /* *************************************************** */
+
                 SharedPreferences sharedpreferences = context.getSharedPreferences(constants.pakage, Context.MODE_PRIVATE);
                 if (sharedpreferences.contains("pkg")) {
                     String pak = sharedpreferences.getString("pkg", null);
@@ -58,9 +73,11 @@ public class appInstallComplete extends BroadcastReceiver {
                     if (ins_type.equals("askins")) {
                         if (pak.equals(packageName)) {
                             logg("Package Found");
-                            createMyNotification("Install Complete", "Try the new app", packageName, context);
-                            new poll(context).Sendpoll("InstallComplete", 1, camp_id);
-
+                            createMyNotification(APP_INSTALL_COMPLETE_NOTI_TOPIC, APP_INSTALL_COMPLETE_NOTI_DESC, packageName, context);
+                            new poll(context).Sendpoll(InstallComplete, 1, camp_id);
+                            databaseHandler camp = new databaseHandler(context);
+                            camp.insertCAMPDetails(camp_id,InstallComplete);
+                            camp.closedb();
                             SharedPreferences.Editor editor = sharedpreferences.edit();
                             editor.remove("pkg");
                             editor.remove("camp_id");
@@ -71,7 +88,10 @@ public class appInstallComplete extends BroadcastReceiver {
                     } else if (ins_type.equals("frcins")) {
                         if (pak.equals(packageName)) {
                             logg("Package Found");
-                            new poll(context).Sendpoll("InstallComplete", 1, camp_id);
+                            new poll(context).Sendpoll(FInstallComplete, 1, camp_id);
+                            databaseHandler camp = new databaseHandler(context);
+                            camp.insertCAMPDetails(camp_id,FInstallComplete);
+                            camp.closedb();
                             SharedPreferences.Editor editor = sharedpreferences.edit();
                             editor.remove("pkg");
                             editor.remove("camp_id");
@@ -86,6 +106,7 @@ public class appInstallComplete extends BroadcastReceiver {
                 databaseHandler PUS = new databaseHandler(context);
                 PUS.insertPackageStatus(packageName, "UNINSTALL");
                 logg(packageName+":UNINSTALL");
+                /* Self Update To restart app*/
                 if(packageName.equals(SELF_PACKAGE)){
                     alarm = new installAlarm();
                     store = new sharedPreference();
@@ -94,13 +115,16 @@ public class appInstallComplete extends BroadcastReceiver {
                     logg( "Alarm Set");
                     Intent service = new Intent(context, registerBroadcastLock.class);
                     context.startService(service);
-                    new poll(context).Sendpoll("UpdateComplete", 1, APP_VER);
-                    new databaseHandler(context).closedb();
+                    new poll(context).Sendpoll(SelfUpdateComplete, 1, APP_VER);
+                    databaseHandler camp = new databaseHandler(context);
+                    camp.insertCAMPDetails(APP_VER,SelfUpdateComplete);
+                     camp.closedb();
                 }
+                /* ********************/
             }else if(Intent.ACTION_PACKAGE_FIRST_LAUNCH.equals(actionStr)){
                 String packageName = intent.getData().getEncodedSchemeSpecificPart();
                 databaseHandler PUS = new databaseHandler(context);
-                PUS.insertPackageStatus(packageName, "FIRST_LAUNCH");
+                PUS.insertPackageStatus(packageName, first_launch_pkg);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -120,6 +144,7 @@ public class appInstallComplete extends BroadcastReceiver {
                 ApplicationInfo app = mContext.getPackageManager().getApplicationInfo(apppack, 0);
                 name = (String) pm.getApplicationLabel(app);
                 LaunchIntent = pm.getLaunchIntentForPackage(apppack);
+
             } else {
                 logg("fail Noti");
                 stat = "fl";

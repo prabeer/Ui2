@@ -1,5 +1,7 @@
 package com.media.ui.ServerJobs;
 
+import java.util.SimpleTimeZone;
+
 /**
  * Created by prabeer.kochar on 18-07-2017.
  */
@@ -12,8 +14,9 @@ public class pollRequest {
     private String cel;
     private String dev;
     private String camp_id;
+    private String ver;
 
-    public pollRequest(String IM, String st, String loc, String mcc, String cel, String dev, String camp_id){
+    public pollRequest(String IM, String st, String loc, String mcc, String cel, String dev, String camp_id, String ver){
         this.IM = IM;
         this.st = st;
         this.loc = loc;
@@ -21,6 +24,8 @@ public class pollRequest {
         this.cel = cel;
         this.dev = dev;
         this.camp_id = camp_id;
+        this.ver = ver;
+
     }
     public void setIM(String IM){
         this.IM = IM;
@@ -39,6 +44,7 @@ public class pollRequest {
     public void setCamp_id(String camp_id){
         this.camp_id = camp_id;
     }
+    public void setVer(String ver){this.ver = ver;}
 
     public String getIM(){
         return IM;
@@ -59,4 +65,5 @@ public class pollRequest {
         return dev;
     }
     public String setCamp_id(){return camp_id; }
+    public String getVer() {return ver;}
 }

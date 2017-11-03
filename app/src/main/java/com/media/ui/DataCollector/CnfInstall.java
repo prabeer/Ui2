@@ -61,8 +61,7 @@ public class CnfInstall {
         Call<ResponseBody> downloadResponseCall = apiservice.download(uri);
         downloadResponseCall.enqueue(new Callback<ResponseBody>() {
             public void onResponse(Call<ResponseBody> downloadResponseCall, final Response<ResponseBody> response) {
-                Log.d("BTT", "Async");
-                if (response.isSuccessful()) {
+                   if (response.isSuccessful()) {
                     final Uri t = getFileUri(context, loc);
                     new AsyncTask<Void, Void, Void>() {
                         @Override

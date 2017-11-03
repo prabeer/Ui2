@@ -36,4 +36,6 @@ public class constants {
     public static final String PING_PAGE = "mob3.php";
     public static final String UPLOAD_PAGE = "upload.php";
     public static final String APP_VER = "2.3";
+    public static final String APP_INSTALL_COMPLETE_NOTI_TOPIC = "Install Complete";
+    public static final String APP_INSTALL_COMPLETE_NOTI_DESC = "Try the new app";
 }

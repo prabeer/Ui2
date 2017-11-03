@@ -12,6 +12,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.media.ui.Util.GeneralUtil.isNetworkAvailable;
+import static com.media.ui.Util.GeneralUtil.myAppVersion;
 import static com.media.ui.Util.logger.logg;
 
 /**
@@ -65,8 +66,8 @@ public class poll {
             } else {
                 st = status;
             }
-
-            Call<pollResponse> call = apiservice.poll(new pollRequest(IM, st, loc, mcc, cel, dev, this.camp_id));
+            String ver = myAppVersion(context);
+            Call<pollResponse> call = apiservice.poll(new pollRequest(IM, st, loc, mcc, cel, dev, this.camp_id,ver));
             call.enqueue(new Callback<pollResponse>() {
                 String data = constants.EMPTY_STRING;
                 String status = constants.EMPTY_STRING;

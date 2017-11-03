@@ -2,12 +2,17 @@ package com.media.ui.Util;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import java.io.File;
+import java.util.List;
 
 import static android.content.Context.ACTIVITY_SERVICE;
+import static com.media.ui.constants.SELF_PACKAGE;
 import static com.media.ui.constants.SERVICE_NAME;
 
 /**
@@ -43,5 +48,14 @@ public class GeneralUtil {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
+    public static String myAppVersion(Context context) {
+       String ver = null;
+            try {
+                PackageInfo pInfo = context.getPackageManager().getPackageInfo(SELF_PACKAGE, PackageManager.GET_META_DATA);
+                 ver = pInfo.versionName;
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        return ver;
+    }
 }
