@@ -74,7 +74,7 @@ public class sendReq {
                 {
                     try {
                         x = response.body().getJson();
-logg("got response");
+                        logg("got response");
                         for (int i = 0; i < x.size(); i++) {
                             App_catagory = x.get(i).getApp_catagory();
                             y = x.get(i).getApp_details();
