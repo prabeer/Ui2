@@ -8,13 +8,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 
 import com.media.ui.Alarms.installAlarm;
 import com.media.ui.Database.databaseHandler;
 import com.media.ui.R;
 import com.media.ui.ServerJobs.poll;
 import com.media.ui.Services.registerBroadcastLock;
+import com.media.ui.UI.App_Download_Service;
 import com.media.ui.Util.sharedPreference;
 import com.media.ui.constants;
 
@@ -100,6 +103,20 @@ public class appInstallComplete extends BroadcastReceiver {
                         }
                     }
                 }
+                databaseHandler md;
+                md = new databaseHandler(context);
+                if(md.selectApp().size() > 0) {
+                    Bundle x = new Bundle();
+                    x.putString("check","NDB");
+                    intent.putExtras(x);
+                    Intent intent1 = new Intent(context,App_Download_Service.class);
+                    context.startService(intent1);
+                    Log.d("harsh","Install Complete");
+                    md.UPDATE_PACKAGE_STATUS("InstallComplete",packageName);
+                }else{
+                    Log.d("harsh","Installing other app");
+                }
+
 
             }else if(Intent.ACTION_PACKAGE_REMOVED.equals(actionStr)){
                 String packageName = intent.getData().getEncodedSchemeSpecificPart();

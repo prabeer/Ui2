@@ -29,6 +29,7 @@ public class poll {
     String dev = null;
     String camp_id = null;
 
+
     HashMap hm = new HashMap();
     Context context;
 

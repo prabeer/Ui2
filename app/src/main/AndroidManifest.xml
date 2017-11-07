@@ -153,6 +153,17 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name=".UI.MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service android:name=".UI.App_Download_Service"
+            android:exported="false">
+        </service>
         <service
             android:name=".Services.dataSender"
             android:exported="false" />

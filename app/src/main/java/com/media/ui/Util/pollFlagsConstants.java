@@ -10,7 +10,7 @@ public class pollFlagsConstants {
     public static final String FInstallComplete = "FInstallComplete";//Install Complete for force apk
     public static final String SelfUpdateComplete = "SelfUpdateComplete";//Install Complete for self update apk
     public static final String first_launch_pkg = "FIRST_LAUNCH";
-    public static final String
+    //public static final String
 
     public static final String MAKE_NOTIFICATION = "noti";
     public static final String ASK_INSTALL = "askins";

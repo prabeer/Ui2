@@ -15,4 +15,5 @@ public class DBEssentials {
     public static final String EAR_JACK = "EARJACK";
     public static final String HOME_KEY = "HOME_KEY";
     public static final String CAMP_DETAILS = "CAMP_DETAILS";
+    public static final String UI_TABLE = "UI_TABLE";
 }

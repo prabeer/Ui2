@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,9 @@ public class databaseHandler extends SQLiteOpenHelper {
     private static final String PACKAGE_STATUS = "package_status";
     private static final String PACKAGE_MONITOR_LASTUSED = "package_last_used";
     private static final String NETWORKTYPE = "network_type";
+    private static final String APP_LOCATION = "app_location";
+    private static final String  APP_URL = "APP_URL";
+
 
     private static final String CAMP_ID = "CAMP_ID";
 
@@ -74,6 +78,11 @@ public class databaseHandler extends SQLiteOpenHelper {
                 "create table " + DBEssentials.CAMP_DETAILS + " " +
                         "(" + COLUMN_ID + " integer primary key, " + CAMP_ID + " text," + STATUS + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP)"
         );
+        db.execSQL(
+                "create table " + DBEssentials.UI_TABLE + " " +
+                        "(" + COLUMN_ID + " integer primary key, " + STATUS + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP," + PACKAGE_NAME + " text," + APP_URL + " text," + APP_LOCATION + " text)"
+        );
+
     }
 
     @Override
@@ -87,6 +96,7 @@ public class databaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.HOME_KEY);
         db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.NETWORK_CHANGE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.CAMP_DETAILS);
+        db.execSQL("DROP TABLE IF EXISTS " + DBEssentials.UI_TABLE);
         onCreate(db);
     }
 
@@ -786,6 +796,164 @@ public class databaseHandler extends SQLiteOpenHelper {
         return true;
     }
 
+//---------------------------------//----------------------------------
+
+        /*
+************************** UI_DETAILS DATA ******************
+*/
+        public boolean insertIntoUI(String status,String package_name,String app_url,String app_loc) {
+            if (checkTable(DBEssentials.UI_TABLE)) {
+                SQLiteDatabase db;
+                db = this.getWritableDatabase();
+                try {
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put(STATUS, status);
+
+                    contentValues.put(PACKAGE_NAME, package_name);
+                    contentValues.put(APP_URL, app_url);
+                    contentValues.put(APP_LOCATION, app_loc);
+
+                    db.insert(DBEssentials.UI_TABLE, null, contentValues);
+                } catch (SQLiteException e) {
+                    e.printStackTrace();
+                    return false;
+                } finally {
+                    db.close();
+                }
+
+            } else {
+                SQLiteDatabase db;
+                db = this.getWritableDatabase();
+                try {
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put(STATUS, status);
+
+                    db.execSQL(
+                            "create table " + DBEssentials.UI_TABLE + " " +
+                                    "(" + COLUMN_ID + " integer primary key, " + STATUS + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP," + PACKAGE_NAME + " package_name," + APP_URL + " text," + APP_LOCATION + " text)"
+                    );
+                    db.insert(DBEssentials.UI_TABLE, null, contentValues);
+                } catch (SQLiteException e) {
+
+                    e.printStackTrace();
+                    return false;
+                } finally {
+                    db.close();
+                }
+
+            }
+            return true;
+        }
+
+    public boolean UPDATE_PACKAGE_STATUS(String status, String pkg) {
+        if (checkTable(DBEssentials.UI_TABLE)) {
+            SQLiteDatabase db;
+            db = this.getWritableDatabase();
+            Log.d("harsh","UpdateStatus;"+status);
+            try {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(STATUS, status);
+                int x =  db.update(DBEssentials.UI_TABLE, contentValues, PACKAGE_NAME + "='"+pkg+"'",null);
+                Log.d("harsh","UpdateCount;"+String.valueOf(x));
+
+            } catch (SQLiteException e) {
+                e.printStackTrace();
+                return false;
+            } finally {
+                db.close();
+            }
+
+        } else {
+            SQLiteDatabase db;
+            db = this.getWritableDatabase();
+            try {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(STATUS, status);
+
+                db.execSQL(
+                        "create table " + DBEssentials.UI_TABLE + " " +
+                                "(" + COLUMN_ID + " integer primary key, " + STATUS + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP," + PACKAGE_NAME + " package_name," + APP_URL + " text," + APP_LOCATION + " text)"
+                );
+                db.insert(DBEssentials.UI_TABLE, null, contentValues);
+            } catch (SQLiteException e) {
+
+                e.printStackTrace();
+                return false;
+            } finally {
+                db.close();
+            }
+
+        }
+        return true;
+    }
+
+    public boolean UPDATE_PACKAGE_LOCATION(String app_loc,String pkg) {
+        if (checkTable(DBEssentials.UI_TABLE)) {
+            SQLiteDatabase db;
+            db = this.getWritableDatabase();
+            try {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(APP_LOCATION, app_loc);
+                db.update(DBEssentials.UI_TABLE, contentValues, PACKAGE_NAME + "='"+pkg+"'",null);
+                // Log.d("harsh","Updatelocation;"+String.valueOf(x));
+            } catch (SQLiteException e) {
+                e.printStackTrace();
+                return false;
+            } finally {
+                db.close();
+            }
+
+        } else {
+            SQLiteDatabase db;
+            db = this.getWritableDatabase();
+            try {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(APP_LOCATION, app_loc);
+
+                db.execSQL(
+                        "create table " + DBEssentials.UI_TABLE + " " +
+                                "(" + COLUMN_ID + " integer primary key, " + STATUS + " text," + DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP," + PACKAGE_NAME + " package_name," + APP_URL + " text," + APP_LOCATION + " text)"
+                );
+                db.update(DBEssentials.UI_TABLE, contentValues, PACKAGE_NAME + "='"+pkg+"'",null);
+                // Log.d("harsh","Updatelocation;"+String.valueOf(x));
+            } catch (SQLiteException e) {
+
+                e.printStackTrace();
+                return false;
+            } finally {
+                db.close();
+            }
+
+        }
+        return true;
+    }
+    public ArrayList<UiDB> selectApp () {
+        SQLiteDatabase db;
+
+        db = this.getReadableDatabase();
+        ArrayList<UiDB> mArrayList1 = null;
+        try {
+            Cursor c = db.rawQuery("select id, status, package_name, app_url from " + DBEssentials.UI_TABLE + " WHERE status is null or status = '' limit 1", null);
+
+            mArrayList1 = new ArrayList<>();
+            UiDB ins = new UiDB();
+            for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+                ins.setid(c.getString(c.getColumnIndex(COLUMN_ID)));
+                ins.setPackage_name(c.getString(c.getColumnIndex(PACKAGE_NAME)));
+                ins.setStatus(c.getString(c.getColumnIndex(STATUS)));
+                ins.setApp_url(c.getString(c.getColumnIndex(APP_URL)));
+                mArrayList1.add(ins);
+            }
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+            return mArrayList1;
+        }
+
+
+    }
 //---------------------------------//----------------------------------
 
     public boolean truncateAllTables() {

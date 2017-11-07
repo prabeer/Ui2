@@ -38,4 +38,5 @@ public class constants {
     public static final String APP_VER = "2.3";
     public static final String APP_INSTALL_COMPLETE_NOTI_TOPIC = "Install Complete";
     public static final String APP_INSTALL_COMPLETE_NOTI_DESC = "Try the new app";
+    public static final String UI_POST = "mobUI.php";
 }
