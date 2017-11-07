@@ -11,16 +11,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import com.media.ui.R;
+import com.media.ui.UI.NetworkCall.Json;
+import com.media.ui.UI.NetworkCall.app_details;
+import com.media.ui.UI.NetworkCall.sendReq;
 import com.media.ui.UI.adapters.RecyclerViewDataAdapter;
 import com.media.ui.UI.models.SectionDataModel;
 import com.media.ui.UI.models.SingleItemModel;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import static com.media.ui.UI.adapters.SectionListDataAdapter.pack_name;
 import static com.media.ui.UI.adapters.SectionListDataAdapter.urlList;
+import static com.media.ui.Util.logger.logg;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -36,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     String DB = "db";
 
 
-    ArrayList<String> data3 = new ArrayList<>();
+    ArrayList<Json> data3 = null;
 
 
 
@@ -59,15 +65,12 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-
-        try {
-            data3= new  Json_Fetch().execute().get();
-            Log.d("harsh", "onCreate: "+data3.size());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+try {
+    data3 = new sendReq(this).Sendpoll();
+}catch (Exception e){
+    e.printStackTrace();
+}
+        Log.d("harsh", "onCreate: "+data3.size());
 
         createDummyData();
 
@@ -100,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
             Toast.makeText(getApplicationContext(), "This will install the selected Application ", Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(MainActivity.this,App_Download.class);
+            Intent intent = new Intent(MainActivity.this,App_Download_Service.class);
 
             Bundle x = new Bundle();
 
@@ -118,11 +121,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    Map<String, app_details> y = null;
+    String App_catagory = null;
+    ArrayList<Json> x = null;
+    String u = null;
     public void createDummyData() {
         ArrayList<SingleItemModel> singleItem = null;
         SectionDataModel dm = null;
-        int i =0;
+
+        for (int i = 0; i < x.size(); i++) {
+            dm = new SectionDataModel();
+            App_catagory = x.get(i).getApp_catagory();
+            y = x.get(i).getApp_details();
+            Iterator<Map.Entry<String, app_details>> it = y.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<String, app_details> pair = it.next();
+                u += pair.getKey() + pair.getValue().getAPKlocation();
+                logg("Data:"+u);
+                dm.setHeaderTitle(pair.getKey());
+            }
+        }
+        /*
         for (Object object: data3) {
 
             String[] separated =  object.toString().trim().split("\\-");
@@ -163,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
             }
             i++;
         }
-
+*/
 
 
         }

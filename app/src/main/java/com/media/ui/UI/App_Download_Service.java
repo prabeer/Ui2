@@ -5,6 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.media.ui.DataCollector.CnfInstall;
+import com.media.ui.Database.UiDB;
+import com.media.ui.Database.databaseHandler;
+import com.media.ui.constants;
+
 import java.util.ArrayList;
 
 /**
@@ -12,10 +17,11 @@ import java.util.ArrayList;
  */
 
 public class App_Download_Service extends IntentService {
-    InstallApp ap;
+    UiDB ap;
     Context context;
-    Main_DataBase md;
+    databaseHandler md;
     String Sr;
+    String loc1 = constants.AppFolder;
     // HashMap<Integer,String> pr = new HashMap<>();
 
     public App_Download_Service() {
@@ -29,15 +35,15 @@ public class App_Download_Service extends IntentService {
         if (intent != null) {
             Log.d("harsh", "intent found");
             Sr = (String) intent.getSerializableExtra("check");
-            md = new Main_DataBase(this);
-            if(Sr != null) {
+            md = new databaseHandler(this);
+            if (Sr != null) {
                 if (Sr.equals("db")) {
                     ArrayList<String> pr = new ArrayList<>();
                     ArrayList<String> Hr = new ArrayList<>();
                     pr = (ArrayList<String>) intent.getSerializableExtra("urlMap");
                     Hr = (ArrayList<String>) intent.getSerializableExtra("urlPack");
                     for (int i = 0; i < pr.size(); i++) {
-                        md.insertINSTALL_TABLE("", Hr.get(i).toString(), pr.get(i).toString(), "");
+                        md.insertIntoUI("", Hr.get(i).toString(), pr.get(i).toString(), "");
                         Log.d("harsh", "Intent pkg: " + pr.get(i).toString());
                     }
 
@@ -46,52 +52,22 @@ public class App_Download_Service extends IntentService {
 
             try {
                 String pkg = "";
-                for(int x = 0; x < md.selectDATA().size();x++ ) {
-                    pkg = md.selectDATA().get(x).getPackage_name().toString();
-                    Log.d("harsh","pkg:"+x+"-"+ pkg);
+                String getLink = "";
+                ArrayList<UiDB> data = new ArrayList<UiDB>();
+                data = md.selectApp();
+                for (int x = 0; x < data.size(); x++) {
+                    pkg = data.get(x).getPackage_name().toString();
+                    getLink = data.get(x).getApp_url().toString();
+                    Log.d("harsh", "pkg:" + x + "-" + pkg);
                 }
+                new CnfInstall(context).downloadAndInstall(loc1, getLink, pkg, "0");
 
-
-                ArrayList<InstallTable> data = new ArrayList<InstallTable>();
-                data =  md.selectDATA();
-                String getLink = data.get(0).getApp_url().toString();
-                Download dl = new Download();
-                Log.d("harsh", "link:URL "+ getLink);
-                String loc = dl.DownloadFiles(getLink);
-                Log.d("harsh", "Location:"+loc);
-                // Change status coulmn in Table
-                md.insertUPDATE_TABLE1("Downloading",pkg);
-                Log.d("harsh", "pkg:"+pkg);
-                if (!loc.equals("")) {
-                    Log.d("harsh", "dlcomplete");
-                    // Updating Location in DataBase
-                    md.insertINSTALL_TABLE2(loc,pkg);
-                    // Change status column in Table
-                    md.insertUPDATE_TABLE1("Downloaded",pkg);
-                    ap = new InstallApp(this);
-                    Log.d("harsh", loc);
-
-                    // Added loc in table.
-                    //  md.insertUPDATE_TABLE1(loc,pkg);
-
-                    if (ap.install(loc, pkg)) {
-
-                        md.insertUPDATE_TABLE1("InstallStart",pkg);
-                        Log.d("harsh", "install done");
-                    } else {
-                        Log.e("harsh", "install fail");
-                    }
-
-
-                } else {
-                    Log.d("harsh", "doInBackground: LOL");
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            return;
         }
         Log.d("harsh", "service stop");
         stopSelf();
+    }
 }

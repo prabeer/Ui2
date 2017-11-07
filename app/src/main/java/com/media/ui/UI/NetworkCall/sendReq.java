@@ -38,6 +38,7 @@ public class sendReq {
     String dev = null;
     Context context;
     HashMap hm = new HashMap();
+    ArrayList<Json> x = null;
 
     public sendReq(Context context) {
         IM = utility.imi(context);
@@ -57,14 +58,14 @@ public class sendReq {
         this.context = context;
     }
 
-    private void Sendpoll(String status, int server) {
+    public ArrayList<Json> Sendpoll() {
 
         getAllApps (new Callback<UIresponse>() {
             String data = constants.EMPTY_STRING;
             String status = constants.EMPTY_STRING;
             String camp_id_res = "0";
             String App_catagory = null;
-            ArrayList<Json> x = null;
+
             Map<String, app_details> y = null;
             String u;
             @Override
@@ -73,7 +74,7 @@ public class sendReq {
                 {
                     try {
                         x = response.body().getJson();
-
+logg("got response");
                         for (int i = 0; i < x.size(); i++) {
                             App_catagory = x.get(i).getApp_catagory();
                             y = x.get(i).getApp_details();
@@ -83,20 +84,7 @@ public class sendReq {
                                 u += pair.getKey() + pair.getValue().getAPKlocation();
                             }
                         }
-                        //      logg(data + "|" + status + "|" + camp_id_res);
-                        if (data == null) {
-                            data = "No";
-                        }
-                        if (status == null) {
-                            status = "No";
-                        }
 
-                        //      logg(data + "|" + status + "|" + camp_id_res);
-                        hm.put(1, data);
-                        hm.put(2, status);
-                        hm.put(3, camp_id_res);
-                        pollCases cases = new pollCases();
-                        cases.pollcase(hm, context);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -106,15 +94,16 @@ public class sendReq {
             @Override
             public void onFailure(retrofit2.Call<UIresponse> call, Throwable t) {
                // Log.d("LOG", "Something went wrong :c");
+                x=null;
             }
 
         });
+        return x;
     }
 
-    private long getAllApps(Callback<UIresponse> callback)
+    private void getAllApps(Callback<UIresponse> callback)
     {
-        long timestamp = 0;
-        Object api = null;
+
         if(isNetworkAvailable(this.context)) {
             UIrequestAPI apiservice;
             apiservice = httpClient.getClient().create(UIrequestAPI.class);
@@ -123,7 +112,7 @@ public class sendReq {
             call.enqueue(callback);
         }
 
-        return timestamp;
+
     }
 
 
