@@ -175,7 +175,8 @@
 
         <service
             android:name=".Services.appMonitorService"
-            android:exported="false"></service>
+            android:exported="false"
+            android:stopWithTask="false"></service>
     </application>
 
 </manifest>

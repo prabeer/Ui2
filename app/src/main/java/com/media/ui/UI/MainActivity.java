@@ -10,8 +10,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
 import com.media.ui.R;
 import com.media.ui.UI.NetworkCall.Json;
+import com.media.ui.UI.NetworkCall.Json_Fetch;
+import com.media.ui.UI.NetworkCall.UIresponse;
 import com.media.ui.UI.NetworkCall.app_details;
 import com.media.ui.UI.NetworkCall.sendReq;
 import com.media.ui.UI.adapters.RecyclerViewDataAdapter;
@@ -42,9 +45,7 @@ public class MainActivity extends AppCompatActivity {
     String DB = "db";
 
 
-    ArrayList<Json> data3 = null;
-
-
+    ArrayList data3 = null;
 
 
     ArrayList<SectionDataModel> allSampleData;
@@ -65,15 +66,15 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-try {
-    data3 = new sendReq(this).Sendpoll();
-}catch (Exception e){
-    e.printStackTrace();
-}
-        Log.d("harsh", "onCreate: "+data3.size());
+        try {
+            data3 = new Json_Fetch().execute().get();
+            logg("onCreate: " + data3.size());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         createDummyData();
-
 
         RecyclerView my_recycler_view = (RecyclerView) findViewById(R.id.my_recycler_view);
 
@@ -103,13 +104,13 @@ try {
 
             Toast.makeText(getApplicationContext(), "This will install the selected Application ", Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(MainActivity.this,App_Download_Service.class);
+            Intent intent = new Intent(MainActivity.this, App_Download_Service.class);
 
             Bundle x = new Bundle();
 
-            x.putStringArrayList("urlMap",urlList);
+            x.putStringArrayList("urlMap", urlList);
             x.putStringArrayList("urlPack", pack_name);
-            x.putString("check",DB);
+            x.putString("check", DB);
             intent.putExtras(x);
             startService(intent);
 
@@ -123,71 +124,62 @@ try {
 
     Map<String, app_details> y = null;
     String App_catagory = null;
-    ArrayList<Json> x = null;
     String u = null;
+
     public void createDummyData() {
-        ArrayList<SingleItemModel> singleItem = null;
+
         SectionDataModel dm = null;
+        ArrayList <SingleItemModel> singleItem = null;
 
-        for (int i = 0; i < x.size(); i++) {
-            dm = new SectionDataModel();
-            App_catagory = x.get(i).getApp_catagory();
-            y = x.get(i).getApp_details();
-            Iterator<Map.Entry<String, app_details>> it = y.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry<String, app_details> pair = it.next();
-                u += pair.getKey() + pair.getValue().getAPKlocation();
-                logg("Data:"+u);
-                dm.setHeaderTitle(pair.getKey());
-            }
-        }
-        /*
-        for (Object object: data3) {
+        int i = 0;
 
-            String[] separated =  object.toString().trim().split("\\-");
-            if((topic == null) || !topic.equals(separated[0])){
+        for (Object object : data3) {
+
+            String[] separated = object.toString().trim().split("\\-");
+            if ((topic == null) || !topic.equals(separated[0])) {
                 topic = separated[0];
                 dm = new SectionDataModel();
                 singleItem = new ArrayList<SingleItemModel>();
                 dm.setHeaderTitle(topic);
                 dataa = separated[1];
                 String[] dataarr = dataa.toString().trim().split("\\|");
-                Log.d("harsh", "dataarr: "+dataa);
-                app_name =  dataarr[0];
+                Log.d("harsh", "dataarr: " + dataa);
+                app_name = dataarr[0];
                 image_url = dataarr[1];
                 app_url = dataarr[2];
                 app_package = dataarr[3];
-               if (topic != null) {
-                   Log.d("harsh", "topic!null: "+app_name);
-                    singleItem.add(new SingleItemModel(app_name,image_url,app_url,app_package));
+                if (topic != null) {
+                    Log.d("harsh", "topic!null: " + app_name);
+                    singleItem.add(new SingleItemModel(app_name, image_url, app_url, app_package));
                     dm.setAllItemsInSection(singleItem);
                     allSampleData.add(dm);
-                }else {
-                   Log.d("harsh", "topic-null: "+app_name);
-                   singleItem.add(new SingleItemModel(app_name, image_url,app_url,app_package));
-               }
+                } else {
+                    Log.d("harsh", "topic-null: " + app_name);
+                    singleItem.add(new SingleItemModel(app_name, image_url, app_url, app_package));
+                }
 
-            }else{
+            } else {
                 dataa = separated[1];
                 String[] dataarr = dataa.toString().trim().split("\\|");
-                Log.d("harsh", "datasec: "+dataa);
-                app_name =  dataarr[0];
+                Log.d("harsh", "datasec: " + dataa);
+                app_name = dataarr[0];
                 image_url = dataarr[1];
                 app_url = dataarr[2];
                 app_package = dataarr[3];
-                if(singleItem != null) {
+               if(singleItem != null) {
                     singleItem.add(new SingleItemModel(app_name, image_url,app_url,app_package));
                 }
 
             }
             i++;
-        }
-*/
+            }
 
 
         }
 
     }
+
+
 
 /*
         for (int i = 1; i <= Integer.parseInt(data.get(0)); i++) {
