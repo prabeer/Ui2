@@ -20,7 +20,6 @@ public class zip {
 
     /**
      * Class with Helper Methods to Create Zip File of the Data Collection Foleder
-     * @author Harman Connected Services
      */
 
 

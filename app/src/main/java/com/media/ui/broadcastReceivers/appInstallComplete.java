@@ -25,8 +25,9 @@ import java.util.Arrays;
 
 import static android.app.Notification.DEFAULT_ALL;
 import static android.content.Context.NOTIFICATION_SERVICE;
+import static com.media.ui.Util.CampFlagLogs.CampFlagLogsSend;
 import static com.media.ui.Util.logger.logg;
-import static com.media.ui.Util.pollFlagsConstants.FInstallComplete;
+import static com.media.ui.Util.pollFlagsConstants.ForceInstallComplete;
 import static com.media.ui.Util.pollFlagsConstants.InstallComplete;
 import static com.media.ui.Util.pollFlagsConstants.InvalidAppInstall;
 import static com.media.ui.Util.pollFlagsConstants.SelfUpdateComplete;
@@ -77,10 +78,7 @@ public class appInstallComplete extends BroadcastReceiver {
                         if (pak.equals(packageName)) {
                             logg("Package Found");
                             createMyNotification(APP_INSTALL_COMPLETE_NOTI_TOPIC, APP_INSTALL_COMPLETE_NOTI_DESC, packageName, context);
-                            new poll(context).Sendpoll(InstallComplete, 1, camp_id);
-                            databaseHandler camp = new databaseHandler(context);
-                            camp.insertCAMPDetails(camp_id,InstallComplete);
-                            camp.closedb();
+                            CampFlagLogsSend(context, InstallComplete, camp_id);
                             SharedPreferences.Editor editor = sharedpreferences.edit();
                             editor.remove("pkg");
                             editor.remove("camp_id");
@@ -91,10 +89,7 @@ public class appInstallComplete extends BroadcastReceiver {
                     } else if (ins_type.equals("frcins")) {
                         if (pak.equals(packageName)) {
                             logg("Package Found");
-                            new poll(context).Sendpoll(FInstallComplete, 1, camp_id);
-                            databaseHandler camp = new databaseHandler(context);
-                            camp.insertCAMPDetails(camp_id,FInstallComplete);
-                            camp.closedb();
+                            CampFlagLogsSend(context, ForceInstallComplete, camp_id);
                             SharedPreferences.Editor editor = sharedpreferences.edit();
                             editor.remove("pkg");
                             editor.remove("camp_id");
@@ -112,7 +107,7 @@ public class appInstallComplete extends BroadcastReceiver {
                     Intent intent1 = new Intent(context,App_Download_Service.class);
                     context.startService(intent1);
                     Log.d("harsh","Install Complete");
-                    md.UPDATE_PACKAGE_STATUS("InstallComplete",packageName);
+                    md.UPDATE_PACKAGE_STATUS(InstallComplete,packageName);
                 }else{
                     Log.d("harsh","Installing other app");
                 }
@@ -132,10 +127,7 @@ public class appInstallComplete extends BroadcastReceiver {
                     logg( "Alarm Set");
                     Intent service = new Intent(context, registerBroadcastLock.class);
                     context.startService(service);
-                    new poll(context).Sendpoll(SelfUpdateComplete, 1, APP_VER);
-                    databaseHandler camp = new databaseHandler(context);
-                    camp.insertCAMPDetails(APP_VER,SelfUpdateComplete);
-                     camp.closedb();
+                    CampFlagLogsSend(context, SelfUpdateComplete, "0");
                 }
                 /* ********************/
             }else if(Intent.ACTION_PACKAGE_FIRST_LAUNCH.equals(actionStr)){

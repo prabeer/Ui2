@@ -14,6 +14,8 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import static com.media.ui.Util.logger.logg;
+
 /**
  * Created by harsh.arora on 24-10-2017.
  */
@@ -52,7 +54,7 @@ public class PollRes {
 
                 str = sb.toString();
 
-                Log.d("harsh", "poll: "+str);
+                logg( "poll: "+str);
             }
         } catch (ProtocolException e) {
             e.printStackTrace();

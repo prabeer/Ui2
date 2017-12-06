@@ -58,4 +58,19 @@ public class GeneralUtil {
             }
         return ver;
     }
+
+    public static boolean PackageExists(Context context, String pkg) {
+        String ver = null;
+        PackageInfo pInfo = null;
+        try {
+            pInfo = context.getPackageManager().getPackageInfo(pkg, PackageManager.GET_META_DATA);
+            ver = pInfo.versionName;
+            if((ver != null) || (pInfo != null)){
+                return true;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

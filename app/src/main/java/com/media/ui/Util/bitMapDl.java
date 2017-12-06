@@ -28,6 +28,7 @@ public class bitMapDl extends AsyncTask<String, Void, Bitmap> {
             InputStream input = new java.net.URL(imageURL).openStream();
             // Decode Bitmap
             bitmap = BitmapFactory.decodeStream(input);
+            input.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

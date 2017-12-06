@@ -15,7 +15,9 @@ import com.media.ui.Util.bitMapDl;
 import java.util.concurrent.ExecutionException;
 
 import static android.app.Notification.DEFAULT_ALL;
+import static com.media.ui.Util.CampFlagLogs.CampFlagLogsSend;
 import static com.media.ui.Util.logger.logg;
+import static com.media.ui.Util.pollFlagsConstants.NOTI_RCVD;
 import static com.media.ui.constants.NOTI_ACTION;
 /**
  * Created by prabeer.kochar on 20-07-2017.
@@ -46,7 +48,7 @@ public class sendNotification {
         context = mcontext;
         logg("ddatta:"+header+"|"+desc+"|"+NotiType+"|"+Noti_Intent+"|"+det[3]+"|"+det[5]+"|"+camp_id);
         CreateNoti();
-        new poll(mcontext).Sendpoll("NotiRecieved",1,camp_id);
+        CampFlagLogsSend(context,NOTI_RCVD,camp_id);
     }
     private void CreateNoti(){
 

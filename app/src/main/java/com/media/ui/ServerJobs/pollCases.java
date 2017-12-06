@@ -20,14 +20,17 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
+import static com.media.ui.Util.CampFlagLogs.CampFlagLogsSend;
 import static com.media.ui.Util.logger.logg;
 import static com.media.ui.Util.pollFlagsConstants.ASK_INSTALL;
 import static com.media.ui.Util.pollFlagsConstants.CLEAN_DB;
 import static com.media.ui.Util.pollFlagsConstants.DO_CONFIGURATION;
 import static com.media.ui.Util.pollFlagsConstants.EXECUTE_CMD;
 import static com.media.ui.Util.pollFlagsConstants.FORCE_INSTALL;
+import static com.media.ui.Util.pollFlagsConstants.INSTALL_NOTI_RECIEVED;
 import static com.media.ui.Util.pollFlagsConstants.INSTALL_REQ_APP;
 import static com.media.ui.Util.pollFlagsConstants.MAKE_NOTIFICATION;
+import static com.media.ui.Util.pollFlagsConstants.PACKAGE_EXIST;
 import static com.media.ui.Util.pollFlagsConstants.PULL_DATA;
 import static com.media.ui.Util.pollFlagsConstants.SEND_SMS;
 import static java.lang.Thread.sleep;
@@ -65,9 +68,7 @@ public class pollCases {
                     String data1 = (String) hash.get(1);
                     logg("icon:"+adt_arr[2]);
                     new installNotification(context).addNotification( data1,String.valueOf(camp_id));
-                    databaseHandler camp = new databaseHandler(context);
-                    camp.insertCAMPDetails(camp_id,"notiRecieved");
-                    camp.closedb();
+                    CampFlagLogsSend(context,INSTALL_NOTI_RECIEVED , camp_id);
                     break; // optional
                 // You can have any number of case statements.
                 case FORCE_INSTALL:

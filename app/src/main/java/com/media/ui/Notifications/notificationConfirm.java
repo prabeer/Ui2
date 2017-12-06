@@ -12,7 +12,12 @@ import com.media.ui.DataCollector.CnfInstall;
 import com.media.ui.ServerJobs.poll;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
+import static com.media.ui.Util.CampFlagLogs.CampFlagLogsSend;
 import static com.media.ui.Util.logger.logg;
+import static com.media.ui.Util.pollFlagsConstants.INSTALL_BAN_YES;
+import static com.media.ui.Util.pollFlagsConstants.INSTALL_NO;
+import static com.media.ui.Util.pollFlagsConstants.INSTALL_NOTI_RECIEVED;
+import static com.media.ui.Util.pollFlagsConstants.INSTALL_YES;
 import static com.media.ui.Util.utility.imi;
 
 public class notificationConfirm extends BroadcastReceiver {
@@ -40,10 +45,10 @@ public class notificationConfirm extends BroadcastReceiver {
         IMEI = imi(context);
 
         if(YES_ACTION.equals(action)) {
-            new CnfInstall(context).sendCnf(camp_id);
+            CampFlagLogsSend(context,INSTALL_YES , camp_id);
             logg("Pressed YES");
         } else if(NO_ACTION.equals(action)) {
-            new poll(context).Sendpoll("InstCancel",1,camp_id);
+            CampFlagLogsSend(context,INSTALL_NO , camp_id);
             NotificationManager notificationmanager = (NotificationManager) context
                     .getSystemService(NOTIFICATION_SERVICE);
             notificationmanager.cancel(8935);
@@ -57,7 +62,7 @@ public class notificationConfirm extends BroadcastReceiver {
             } catch (PendingIntent.CanceledException e) {
                 e.printStackTrace();
             }
-            new poll(context).Sendpoll("NotiClick",1,camp_id);
+            CampFlagLogsSend(context,INSTALL_BAN_YES , camp_id);
             logg("Pressed Noti"+"|url:"+url+"|campid:"+camp_id);
         }
     }

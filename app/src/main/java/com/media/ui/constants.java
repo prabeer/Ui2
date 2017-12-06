@@ -14,7 +14,7 @@ public class constants {
     public static final String FORWARD_SLASH = "/";
     public static final String EMPTY_STRING = "";
     public static final String BASE_URL = "http://192.168.43.180/pushapp/"; //Server1
-    public static final String BASE_URL2 = "http://192.168.43.180/WAR/"; //Server2
+    public static final String BASE_URL2 = "http://camp.panasonicarbo.com/WAR/"; //Server2
     public static final String multipart_file = "multipart/form-data";
     public static final String FILE = "file";
     public static final String DEFAULT_STATUS = "polling";
@@ -40,4 +40,5 @@ public class constants {
     public static final String APP_INSTALL_COMPLETE_NOTI_DESC = "Try the new app";
     public static final String UI_POST = "mobUI.php";
     public static final String URL13=BASE_URL+UI_POST;
+
 }

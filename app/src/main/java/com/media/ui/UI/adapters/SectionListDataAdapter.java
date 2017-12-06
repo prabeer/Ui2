@@ -23,6 +23,8 @@ import com.media.ui.UI.models.SingleItemModel;
 
 import java.util.ArrayList;
 
+import static com.media.ui.Util.logger.logg;
+
 
 public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListDataAdapter.SingleItemRowHolder> {
 
@@ -104,17 +106,17 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                     Add_to_list( singleItem.getAppURL());
                     Add_to_list1( singleItem.getAppPackage());
                     Toast.makeText(buttonView.getContext(), "Size of urlList" + urlList.size(), Toast.LENGTH_SHORT).show();
-                    Log.d("harsha", "Size of urlList" + urlList.toString());
-                 //   Log.d("harsha", "Size of urlList" + urlList.get(1).toString());
-                    Log.d("harsha", "Size of urlList" + pack_name.toString());
+                    logg("Size of urlList" + urlList.toString());
+                 //   logg("Size of urlList" + urlList.get(1).toString());
+                    logg("Size of urlList" + pack_name.toString());
                 }
 
                 else{
                     Remove_from_list(singleItem.getAppURL());
                     Remove_from_list1(singleItem.getAppPackage());
                     Toast.makeText(buttonView.getContext(), "Size of urlList" + urlList.size(), Toast.LENGTH_SHORT).show();
-                    Log.d("harsha", "Size of urlList" + urlList.toString());
-                    Log.d("harsha", "Size of urlList" + pack_name.toString());
+                    logg("Size of urlList" + urlList.toString());
+                    logg("Size of urlList" + pack_name.toString());
                 }
 
 

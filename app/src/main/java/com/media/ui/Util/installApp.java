@@ -34,7 +34,7 @@ public class installApp {
         mcontext = context;
     }
 
-    public boolean install(String loc, String pkg) {
+    public boolean install(String loc, String pkg) throws IOException {
         logg("Package:- " + pkg);
         if (!pkg.isEmpty()) {
             InputStream i = null;
@@ -48,14 +48,16 @@ public class installApp {
 
                 try {
                     installPackage(mcontext, i, pkg);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 logg("Cmd: Ins From p");
-
+                i.close();
                 return true;
 
             } else {
+                i.close();
                 return false;
             }
         } else {
@@ -69,20 +71,33 @@ public class installApp {
                     i = new FileInputStream(f);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
+                } catch (Exception e){
+                    i.close();
+                    e.printStackTrace();
                 }
                 if (f.exists()) {
 
                     logg("Cmd: Ins From p");
                     try {
                         installPackage(mcontext, i, pkg);
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
+                    try {
+                        i.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     if (isPackageExisted(pkg)) {
                         return true;
                     }
                 } else {
+                    try {
+                        i.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     return false;
                 }
 
@@ -107,7 +122,7 @@ public class installApp {
 
     public static boolean installPackage(Context context, InputStream in, String packageName)
             throws IOException {
-
+            logg("Pkg Install Start");
 
         PackageInstaller packageInstaller = context.getPackageManager().getPackageInstaller();
         PackageInstaller.SessionParams params = new PackageInstaller.SessionParams(

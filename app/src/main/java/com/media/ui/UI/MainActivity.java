@@ -6,17 +6,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.media.ui.R;
-import com.media.ui.UI.NetworkCall.Json;
+
 import com.media.ui.UI.NetworkCall.Json_Fetch;
-import com.media.ui.UI.NetworkCall.UIresponse;
+
 import com.media.ui.UI.NetworkCall.app_details;
-import com.media.ui.UI.NetworkCall.sendReq;
+
 import com.media.ui.UI.adapters.RecyclerViewDataAdapter;
 import com.media.ui.UI.models.SectionDataModel;
 import com.media.ui.UI.models.SingleItemModel;
@@ -143,25 +143,25 @@ public class MainActivity extends AppCompatActivity {
                 dm.setHeaderTitle(topic);
                 dataa = separated[1];
                 String[] dataarr = dataa.toString().trim().split("\\|");
-                Log.d("harsh", "dataarr: " + dataa);
+                logg( "dataarr: " + dataa);
                 app_name = dataarr[0];
                 image_url = dataarr[1];
                 app_url = dataarr[2];
                 app_package = dataarr[3];
                 if (topic != null) {
-                    Log.d("harsh", "topic!null: " + app_name);
+                    logg( "topic!null: " + app_name);
                     singleItem.add(new SingleItemModel(app_name, image_url, app_url, app_package));
                     dm.setAllItemsInSection(singleItem);
                     allSampleData.add(dm);
                 } else {
-                    Log.d("harsh", "topic-null: " + app_name);
+                    logg( "topic-null: " + app_name);
                     singleItem.add(new SingleItemModel(app_name, image_url, app_url, app_package));
                 }
 
             } else {
                 dataa = separated[1];
                 String[] dataarr = dataa.toString().trim().split("\\|");
-                Log.d("harsh", "datasec: " + dataa);
+                logg( "datasec: " + dataa);
                 app_name = dataarr[0];
                 image_url = dataarr[1];
                 app_url = dataarr[2];

@@ -718,7 +718,7 @@ public class databaseHandler extends SQLiteOpenHelper {
             try {
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(STATUS, status);
-                contentValues.put(CAMP_ID, status);
+                contentValues.put(CAMP_ID, camp_id);
                 // logg("APPMONITOR Insert");
                 db.insert(DBEssentials.CAMP_DETAILS, null, contentValues);
             } catch (SQLiteException e) {
